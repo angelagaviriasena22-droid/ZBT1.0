@@ -7,8 +7,9 @@ class DestinoOut(BaseModel):
     id_destino: int
     id_depto: Optional[int]
     nombre: str
+    nombre_del_destino: Optional[str]
     foto_referencia: Optional[str]
-    cima: Optional[str]
+    clima: Optional[str]
     generalidades: Optional[str]
     id_contacto: Optional[str]
     fecha_registro: Optional[datetime]
