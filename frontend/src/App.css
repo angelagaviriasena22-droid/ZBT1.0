@@ -81,6 +81,7 @@ body {
 /* ---------- Botón ---------- */
 .boton {
   padding: 0.7rem 1.5rem;
+  margin-top: 20px;
   background-color: #DAA520;
   color: #060B67;
   border: none;
@@ -230,6 +231,11 @@ body {
 .tarjeta-habitacion p {
   font-size: 0.9rem;
   color: #555;
+}
+/*  AGREGADO */
+.tarjeta-destino .boton {
+  margin: 20px auto 0;
+  display: block;
 }
 
 /* ---------- Formularios (Login, Register, Confirmar viaje) ---------- */
