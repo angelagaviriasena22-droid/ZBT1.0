@@ -367,6 +367,19 @@ body {
   color: #333333;
   border-left: 5px solid #145C93;
 }
+/* ---------- Descripción del departamento ---------- */
+.descripcion-depto {
+  max-width: 800px;
+  margin: 1.5rem auto;
+  padding: 1.5rem 2rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #333333;
+  text-align: center;
+}
 
 /* ---------- Carrusel (gastronomía, actividades, transporte) ---------- */
 .seccion-carrusel {
