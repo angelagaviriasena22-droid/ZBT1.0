@@ -35,6 +35,7 @@ export interface Habitacion {
   descripcion: string | null;
   estado: string | null;
   precio: number | null;
+  foto_referencia: string | null;
 }
 
 export interface Usuario {

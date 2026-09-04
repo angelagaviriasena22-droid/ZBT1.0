@@ -13,6 +13,7 @@ function DestinosPorDepto() {
 
   useEffect(() => {
     setCargando(true);
+    
     Promise.all([
       api.get<Depto>(`/deptos/${idDepto}`),
       api.get<Destino[]>(`/destinos/?id_depto=${idDepto}`),

@@ -22,7 +22,7 @@ def crear_viaje(viaje: ViajePersonalizadoCreate, db: Session = Depends(get_db)):
             detail="La fecha final debe ser posterior a la fecha inicial",
         )
 
-    nuevo_viaje = ViajePersonalizado(**viaje.model_dump())
+    nuevo_viaje = ViajePersonalizado(**viaje.model_dump(), estado="reservado")
     db.add(nuevo_viaje)
     db.commit()
     db.refresh(nuevo_viaje)  # aquí ya trae el precio calculado por el trigger

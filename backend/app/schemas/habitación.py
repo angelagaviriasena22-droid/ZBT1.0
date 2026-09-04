@@ -9,6 +9,7 @@ class HabitacionOut(BaseModel):
     descripcion: Optional[str]
     estado: Optional[str]
     precio: Optional[Decimal]
+    foto_referencia: Optional[str]
 
     class Config:
         from_attributes = True

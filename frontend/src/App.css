@@ -439,5 +439,480 @@ body {
   color: #222;
   line-height: 1.4;
 }
+/* =====================================================
+   CREAR VIAJE PERSONALIZADO
+   ===================================================== */
+
+.contenedor-crear-viaje {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 45px 40px 60px;
+}
+
+/* ---------- Encabezado ---------- */
+
+.encabezado-viaje {
+  margin-bottom: 30px;
+}
+
+.encabezado-viaje h1 {
+  font-size: 2.6rem;
+  color: #172033;
+  margin-bottom: 14px;
+}
+
+.encabezado-viaje p {
+  font-size: 1.05rem;
+  color: #42464d;
+  line-height: 1.6;
+}
+
+/* ---------- Tarjetas informativas ---------- */
+
+.informacion-viaje {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-bottom: 38px;
+}
+
+.tarjeta-info {
+  display: flex;
+  gap: 20px;
+  padding: 25px;
+  min-height: 190px;
+
+  background: #fffaf5;
+  border: 1px solid #ded8d0;
+  border-radius: 16px;
+
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+}
+
+.icono-info {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  font-size: 25px;
+}
+
+.gastronomia .icono-info {
+  background: #f7a623;
+}
+
+.transporte .icono-info {
+  background: #2bb673;
+}
+
+.actividades .icono-info {
+  background: #2788d8;
+}
+
+.tarjeta-info h2 {
+  margin: 0 0 12px;
+
+  color: #145c93;
+  font-size: 1.45rem;
+}
+
+.tarjeta-info p {
+  margin-bottom: 10px;
+
+  color: #3f4247;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.tarjeta-info .contacto {
+  margin-top: 12px;
+  font-weight: 500;
+}
+
+/* ---------- Títulos ---------- */
+
+.titulo-seccion {
+  margin-bottom: 18px;
+
+  color: #172033;
+  font-size: 1.65rem;
+}
+
+/* ---------- Hoteles ---------- */
+
+.seccion-hotel {
+  margin-top: 15px;
+  margin-bottom: 35px;
+}
+
+.lista-hoteles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
+  gap: 20px;
+}
+
+.seccion-hotel .tarjeta-hotel {
+  display: flex;
+
+  min-height: 190px;
+  padding: 0;
+
+  background: #fffaf5;
+  border: 1px solid #ded8d0;
+  border-radius: 15px;
+
+  overflow: hidden;
+
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+
+  cursor: pointer;
+
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.seccion-hotel .tarjeta-hotel:hover {
+  transform: translateY(-4px);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.13);
+}
+
+.seccion-hotel .tarjeta-hotel.seleccionada {
+  border: 3px solid #145c93;
+}
+
+.seccion-hotel .tarjeta-hotel img {
+  width: 43%;
+  height: 190px;
+
+  object-fit: cover;
+
+  border-radius: 0;
+  margin: 0;
+}
+
+.imagen-sin-foto {
+  width: 43%;
+  min-width: 43%;
+  height: 190px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #e9e2db;
+  color: #777;
+
+  text-align: center;
+}
+
+.contenido-hotel {
+  flex: 1;
+  padding: 20px;
+}
+
+.contenido-hotel h3 {
+  margin-bottom: 9px;
+
+  color: #145c93;
+  font-size: 1.35rem;
+}
+
+.direccion {
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.descripcion-hotel {
+  color: #4a4a4a;
+
+  line-height: 1.45;
+
+  margin-bottom: 12px;
+}
+
+.precio-hotel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 10px;
+  padding-top: 12px;
+
+  border-top: 1px solid #ddd;
+}
+
+.precio-hotel span {
+  color: #444;
+}
+
+.precio-hotel strong {
+  color: #145c93;
+  font-size: 1.15rem;
+}
+
+/* ---------- Habitaciones ---------- */
+
+.seccion-habitaciones {
+  margin-top: 25px;
+}
+
+.lista-habitaciones {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.seccion-habitaciones .tarjeta-habitacion {
+  padding: 0;
+
+  background: #fffaf5;
+  border: 1px solid #ded8d0;
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+
+  cursor: pointer;
+
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.seccion-habitaciones .tarjeta-habitacion:hover {
+  transform: translateY(-4px);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.13);
+}
+
+.seccion-habitaciones .tarjeta-habitacion.seleccionada {
+  border: 3px solid #145c93;
+}
+
+.imagen-habitacion {
+  height: 145px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #e9e2db;
+
+  font-size: 50px;
+}
+
+.contenido-habitacion {
+  padding: 18px;
+}
+
+.contenido-habitacion h3 {
+  margin-bottom: 14px;
+
+  color: #145c93;
+  font-size: 1.15rem;
+}
+
+.datos-habitacion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  padding-bottom: 14px;
+  margin-bottom: 12px;
+
+  border-bottom: 1px solid #ddd;
+
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.precio-habitacion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.precio-habitacion span {
+  color: #444;
+}
+
+.precio-habitacion strong {
+  color: #145c93;
+  font-size: 1.1rem;
+}
+
+.sin-habitaciones {
+  padding: 20px;
+
+  background: #fffaf5;
+  border-radius: 12px;
+
+  color: #555;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 1100px) {
+
+  .informacion-viaje {
+    grid-template-columns: 1fr;
+  }
+
+  .lista-habitaciones {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+
+  .contenedor-crear-viaje {
+    padding: 30px 18px 45px;
+  }
+
+  .encabezado-viaje h1 {
+    font-size: 2rem;
+  }
+
+  .lista-hoteles {
+    grid-template-columns: 1fr;
+  }
+
+  .seccion-hotel .tarjeta-hotel {
+    flex-direction: column;
+  }
+
+  .seccion-hotel .tarjeta-hotel img,
+  .imagen-sin-foto {
+    width: 100%;
+    min-width: 100%;
+    height: 190px;
+  }
+
+  .lista-habitaciones {
+    grid-template-columns: 1fr;
+  }
+  /* ===== CALENDARIO DE RESERVA POR HABITACIÓN ===== */
+.habitacion-ocupada {
+  opacity: 0.55;
+}
+
+.etiqueta-estado {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.etiqueta-estado.disponible {
+  background: #dff0d8;
+  color: #2e7d32;
+}
+
+.etiqueta-estado.ocupada {
+  background: #f8d7da;
+  color: #a30000;
+}
+
+.panel-fechas {
+  padding: 16px 18px;
+  border-top: 1px solid #e2d9cf;
+  background: #f9f5f0;
+}
+
+.campo-fecha {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.campo-fecha label {
+  font-size: 0.8rem;
+  color: #060b67;
+}
+
+.campo-fecha input[type="date"] {
+  padding: 8px 10px;
+  border: 1px solid #cbbfae;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.resumen-fecha {
+  margin: 8px 0;
+  font-weight: 600;
+  color: #145c93;
+}
+
+.error-fecha {
+  margin: 8px 0;
+  color: #a30000;
+  font-size: 0.85rem;
+}
+
+.boton-confirmar-habitacion {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+
+  background: #ffb700;
+  border: none;
+  border-radius: 10px;
+
+  font-weight: 700;
+  color: #060b67;
+  cursor: pointer;
+}
+
+.boton-confirmar-habitacion:hover {
+  background: #e6a500;
+}
+
+.boton-confirmar-habitacion:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+/* ===== OCUPACIÓN DEL HOTEL ===== */
+.ocupacion-hotel {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #060b67;
+}
+
+.ocupacion-hotel strong {
+  color: #145c93;
+}
+
+.hotel-lleno {
+  margin-top: 8px;
+  padding: 4px 10px;
+
+  background: #f8d7da;
+  color: #a30000;
+  border-radius: 8px;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.hotel-bloqueado {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+}
 
 

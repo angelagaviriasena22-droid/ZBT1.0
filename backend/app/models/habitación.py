@@ -10,3 +10,4 @@ class Habitacion(Base):
     descripcion = Column(String)
     estado = Column(String)
     precio = Column(Numeric)
+    foto_referencia = Column(String)
