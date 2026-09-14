@@ -14,7 +14,6 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [cargando, setCargando] = useState<boolean>(false);
   const [usuarioActual, setUsuarioActual] = useState<User | null>(null);
 
-  // Campos del formulario
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [nombre, setNombre] = useState("");
@@ -23,10 +22,9 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [direccion, setDireccion] = useState("");
   const [telefono, setTelefono] = useState("");
 
-  // Cada vez que se abra el modal, revisamos si ya hay un usuario en sesión
   useEffect(() => {
     if (isOpen) {
-      const user = authService.getCurrentUser(); // Asegúrate de tener este método o leer de localStorage
+      const user = authService.getCurrentUser();
       setUsuarioActual(user);
       setError(null);
     }
@@ -35,9 +33,9 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   if (!isOpen) return null;
 
   const handleCerrarSesion = () => {
-    authService.logout(); // Borra la sesión del localStorage
-    setUsuarioActual(null); // Limpia el estado local del componente
-    window.location.reload(); // Recarga para actualizar toda la app
+    authService.logout();
+    setUsuarioActual(null);
+    window.location.reload();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -61,7 +59,6 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
           rol: "usuario",
         });
 
-        // Cambia a la vista de inicio de sesión sin iniciar sesión automáticamente
         setEsRegistro(false);
         setContrasena("");
         setError("¡Cuenta creada con éxito! Por favor inicia sesión.");
@@ -88,67 +85,62 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl border border-gray-100 relative">
+    <div className="auth-modal-overlay">
+      <div className="auth-modal-card">
         <button
           onClick={onClose}
           type="button"
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-bold"
+          className="auth-close-btn"
         >
           ✕
         </button>
 
-        {/* Si ya hay una sesión activa, mostramos la opción de cerrar sesión aquí mismo para que puedas probarlo */}
         {usuarioActual ? (
-          <div className="text-center py-6 space-y-4">
-            <h2 className="text-xl font-bold text-[#0f2b5c]">
+          <div className="auth-logged-container">
+            <h2 className="auth-title">
               Ya has iniciado sesión
             </h2>
-            <p className="text-sm text-gray-600">
-              Conectado como: <span className="font-semibold">{usuarioActual.correo || "Usuario"}</span>
+            <p className="auth-session-box">
+              Conectado como: <span className="auth-session-email">{usuarioActual.correo || "Usuario"}</span>
             </p>
             <button
               onClick={handleCerrarSesion}
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-lg transition shadow-md"
+              className="auth-logout-btn"
             >
               Cerrar Sesión
             </button>
           </div>
         ) : (
           <>
-            <h2 className="text-2xl font-bold text-[#0f2b5c] mb-2 text-center">
+            <h2 className="auth-title">
               {esRegistro ? "Crear una cuenta" : "Iniciar Sesión"}
             </h2>
-            <p className="text-xs text-gray-500 text-center mb-6">
+            <p className="auth-subtitle">
               {esRegistro
-                ? "Ingresa tus datos para registrarte"
+                ? "Ingresa tus datos para registrarte y empezar tu viaje"
                 : "Inicia sesión para continuar con tu reserva"}
             </p>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="auth-form">
               {esRegistro && (
                 <>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="auth-grid-2">
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
-                        Nombre
-                      </label>
+                      <label className="auth-label">Nombre</label>
                       <input
                         type="text"
                         required
-                        className="w-full border rounded-lg p-2 text-sm outline-none focus:ring-1 focus:ring-[#c59b27]"
+                        className="auth-input-field"
                         value={nombre}
                         onChange={(e) => setNombre(e.target.value)}
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
-                        Apellidos
-                      </label>
+                      <label className="auth-label">Apellidos</label>
                       <input
                         type="text"
                         required
-                        className="w-full border rounded-lg p-2 text-sm outline-none focus:ring-1 focus:ring-[#c59b27]"
+                        className="auth-input-field"
                         value={apellidos}
                         onChange={(e) => setApellidos(e.target.value)}
                       />
@@ -156,42 +148,36 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
-                      Ciudad
-                    </label>
+                    <label className="auth-label">Ciudad</label>
                     <input
                       type="text"
                       required
                       placeholder="Ej. Bogotá"
-                      className="w-full border rounded-lg p-2 text-sm outline-none focus:ring-1 focus:ring-[#c59b27]"
+                      className="auth-input-field"
                       value={ciudad}
                       onChange={(e) => setCiudad(e.target.value)}
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="auth-grid-2">
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
-                        Dirección
-                      </label>
+                      <label className="auth-label">Dirección</label>
                       <input
                         type="text"
                         required
                         placeholder="Calle / Carrera"
-                        className="w-full border rounded-lg p-2 text-sm outline-none focus:ring-1 focus:ring-[#c59b27]"
+                        className="auth-input-field"
                         value={direccion}
                         onChange={(e) => setDireccion(e.target.value)}
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">
-                        Teléfono
-                      </label>
+                      <label className="auth-label">Teléfono</label>
                       <input
                         type="tel"
                         required
                         placeholder="3000000000"
-                        className="w-full border rounded-lg p-2 text-sm outline-none focus:ring-1 focus:ring-[#c59b27]"
+                        className="auth-input-field"
                         value={telefono}
                         onChange={(e) => setTelefono(e.target.value)}
                       />
@@ -201,45 +187,39 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
               )}
 
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1">
-                  Correo Electrónico
-                </label>
+                <label className="auth-label">Correo Electrónico</label>
                 <input
                   type="email"
                   required
-                  className="w-full border rounded-lg p-2 text-sm outline-none focus:ring-1 focus:ring-[#c59b27]"
+                  placeholder="tucorreo@email.com"
+                  className="auth-input-field"
                   value={correo}
                   onChange={(e) => setCorreo(e.target.value)}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1">
-                  Contraseña
-                </label>
+                <label className="auth-label">Contraseña</label>
                 <input
                   type="password"
                   required
-                  className="w-full border rounded-lg p-2 text-sm outline-none focus:ring-1 focus:ring-[#c59b27]"
+                  placeholder="••••••••"
+                  className="auth-input-field"
                   value={contrasena}
                   onChange={(e) => setContrasena(e.target.value)}
                 />
               </div>
 
               {error && (
-                <p
-                  className={`text-xs font-semibold ${
-                    error.includes("éxito") ? "text-green-600" : "text-red-500"
-                  }`}
-                >
+                <div className={`auth-alert ${error.includes("éxito") ? "auth-alert-success" : "auth-alert-error"}`}>
                   {error}
-                </p>
+                </div>
               )}
 
               <button
                 type="submit"
                 disabled={cargando}
-                className="w-full bg-[#c59b27] hover:bg-[#b08821] text-white font-bold py-2.5 rounded-lg transition disabled:opacity-50 mt-2"
+                className="auth-submit-btn"
               >
                 {cargando
                   ? "Cargando..."
@@ -249,10 +229,10 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
               </button>
             </form>
 
-            <div className="mt-4 text-center">
+            <div className="auth-switch-container">
               <button
                 type="button"
-                className="text-xs text-[#0f2b5c] font-semibold underline"
+                className="auth-switch-btn"
                 onClick={() => {
                   setEsRegistro(!esRegistro);
                   setError(null);

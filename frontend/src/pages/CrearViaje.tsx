@@ -144,7 +144,6 @@ export function CrearViaje() {
         setHabitaciones(r.data);
       }
       cargarHoteles();
-
       setHabitacionExpandida(null);
     } catch (err: any) {
       setFechasPorHabitacion((prev) => ({
@@ -191,15 +190,16 @@ export function CrearViaje() {
       return;
     }
 
-    // Si el usuario no ha iniciado sesión, abre el modal
-    if (!usuario) {
+    // Validación de usuario: Si no ha iniciado sesión, guarda la habitación y abre el modal
+    const usuarioActual = authService.getCurrentUser() || usuario;
+    if (!usuarioActual) {
       setHabitacionPendiente(habitacion);
       setIsAuthModalOpen(true);
       return;
     }
 
-    // Si ya hay usuario autenticado, procesa la reserva
-    procesarReservaBackend(habitacion, usuario);
+    // Si ya hay usuario autenticado, procesa la reserva directamente
+    procesarReservaBackend(habitacion, usuarioActual);
   };
 
   // Callback cuando se inicia sesión o registra exitosamente desde AuthModal
@@ -207,6 +207,7 @@ export function CrearViaje() {
     setUsuario(userLogueado);
     setIsAuthModalOpen(false);
 
+    // Si el usuario intentó reservar una habitación antes de loguearse, la procesamos ahora
     if (habitacionPendiente) {
       procesarReservaBackend(habitacionPendiente, userLogueado);
       setHabitacionPendiente(null);
@@ -498,7 +499,7 @@ export function CrearViaje() {
         </section>
       )}
 
-      {/* Modal de Registro e Inicio de Sesión */}
+      {/* Modal de Autenticación Integrado */}
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
