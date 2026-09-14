@@ -58,7 +58,6 @@ body {
 }
 
 /* ---------- Componentes de Home / Hero ---------- */
-
 .linea-separadora {
   width: 80px;
   height: 3px;
@@ -78,7 +77,7 @@ body {
   font-size: 0.9rem;
 }
 
-/* ---------- Botón ---------- */
+/* ---------- Botón General ---------- */
 .boton {
   padding: 0.7rem 1.5rem;
   margin-top: 20px;
@@ -124,7 +123,7 @@ body {
   opacity: 1;
 }
 
-/* ---------- Sección de departamentos ---------- */
+/* ---------- Sección de Departamentos ---------- */
 .contenedor-departamentos {
   padding: 2.5rem 2rem;
   max-width: 1100px;
@@ -232,7 +231,7 @@ body {
   font-size: 0.9rem;
   color: #555;
 }
-/*  AGREGADO */
+
 .tarjeta-destino .boton {
   margin: 20px auto 0;
   display: block;
@@ -282,7 +281,7 @@ body {
   border-color: #FFB700;
 }
 
-/* ---------- Mensajes de error ---------- */
+/* ---------- Mensajes de Error ---------- */
 .error {
   color: #c0392b;
   background-color: #fdecea;
@@ -291,7 +290,7 @@ body {
   font-size: 0.9rem;
 }
 
-/* ---------- Pantalla de éxito ---------- */
+/* ---------- Pantalla de Éxito ---------- */
 .contenedor-exito {
   max-width: 500px;
   margin: 4rem auto;
@@ -319,7 +318,7 @@ body {
   text-decoration: underline;
 }
 
-/* ---------- Imagen dentro de tarjeta ---------- */
+/* ---------- Imágenes ---------- */
 .imagen-tarjeta {
   width: 100%;
   height: 160px;
@@ -328,7 +327,6 @@ body {
   margin-bottom: 0.8rem;
 }
 
-/* ---------- Rectángulo de imagen grande (depto / destino) ---------- */
 .rectangulo-imagen {
   width: 100%;
   height: 380px;
@@ -349,7 +347,7 @@ body {
   font-size: 2rem;
 }
 
-/* ---------- Detalle de destino y descripción ---------- */
+/* ---------- Detalles de Destino ---------- */
 .contenedor-detalle-destino {
   max-width: 1000px;
   margin: 2rem auto;
@@ -367,7 +365,7 @@ body {
   color: #333333;
   border-left: 5px solid #145C93;
 }
-/* ---------- Descripción del departamento ---------- */
+
 .descripcion-depto {
   max-width: 800px;
   margin: 1.5rem auto;
@@ -381,7 +379,7 @@ body {
   text-align: center;
 }
 
-/* ---------- Carrusel (gastronomía, actividades, transporte) ---------- */
+/* ---------- Carrusel ---------- */
 .seccion-carrusel {
   margin: 2.5rem 0;
   padding: 0 2rem;
@@ -400,21 +398,22 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Barra de scroll más discreta */
 .carrusel::-webkit-scrollbar {
   height: 8px;
 }
+
 .carrusel::-webkit-scrollbar-thumb {
   background-color: #060B67;
   border-radius: 10px;
 }
+
 .carrusel::-webkit-scrollbar-track {
   background: #F1EAE3;
 }
 
 .carrusel-item {
   flex: 0 0 auto;
-  width: 400px;              /* ancho ampliado de la tarjeta */
+  width: 400px;
   background-color: #fff;
   border-radius: 12px;
   overflow: hidden;
@@ -428,7 +427,7 @@ body {
 
 .carrusel-item img {
   width: 100%;
-  height: 250px;             /* imagen más grande */
+  height: 250px;
   object-fit: cover;
   display: block;
 }
@@ -439,6 +438,7 @@ body {
   color: #222;
   line-height: 1.4;
 }
+
 /* =====================================================
    CREAR VIAJE PERSONALIZADO
    ===================================================== */
@@ -449,8 +449,6 @@ body {
   margin: 0 auto;
   padding: 45px 40px 60px;
 }
-
-/* ---------- Encabezado ---------- */
 
 .encabezado-viaje {
   margin-bottom: 30px;
@@ -468,8 +466,6 @@ body {
   line-height: 1.6;
 }
 
-/* ---------- Tarjetas informativas ---------- */
-
 .informacion-viaje {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -482,11 +478,9 @@ body {
   gap: 20px;
   padding: 25px;
   min-height: 190px;
-
   background: #fffaf5;
   border: 1px solid #ded8d0;
   border-radius: 16px;
-
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
 }
 
@@ -494,37 +488,25 @@ body {
   width: 52px;
   height: 52px;
   min-width: 52px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 50%;
   font-size: 25px;
 }
 
-.gastronomia .icono-info {
-  background: #f7a623;
-}
-
-.transporte .icono-info {
-  background: #2bb673;
-}
-
-.actividades .icono-info {
-  background: #2788d8;
-}
+.gastronomia .icono-info { background: #f7a623; }
+.transporte .icono-info { background: #2bb673; }
+.actividades .icono-info { background: #2788d8; }
 
 .tarjeta-info h2 {
   margin: 0 0 12px;
-
   color: #145c93;
   font-size: 1.45rem;
 }
 
 .tarjeta-info p {
   margin-bottom: 10px;
-
   color: #3f4247;
   font-size: 1rem;
   line-height: 1.55;
@@ -535,17 +517,13 @@ body {
   font-weight: 500;
 }
 
-/* ---------- Títulos ---------- */
-
 .titulo-seccion {
   margin-bottom: 18px;
-
   color: #172033;
   font-size: 1.65rem;
 }
 
-/* ---------- Hoteles ---------- */
-
+/* ---------- Hoteles Sección ---------- */
 .seccion-hotel {
   margin-top: 15px;
   margin-bottom: 35px;
@@ -559,27 +537,19 @@ body {
 
 .seccion-hotel .tarjeta-hotel {
   display: flex;
-
   min-height: 190px;
   padding: 0;
-
   background: #fffaf5;
   border: 1px solid #ded8d0;
   border-radius: 15px;
-
   overflow: hidden;
-
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-
   cursor: pointer;
-
-  transition: transform 0.2s ease,
-              box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .seccion-hotel .tarjeta-hotel:hover {
   transform: translateY(-4px);
-
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.13);
 }
 
@@ -590,9 +560,7 @@ body {
 .seccion-hotel .tarjeta-hotel img {
   width: 43%;
   height: 190px;
-
   object-fit: cover;
-
   border-radius: 0;
   margin: 0;
 }
@@ -601,14 +569,11 @@ body {
   width: 43%;
   min-width: 43%;
   height: 190px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   background: #e9e2db;
   color: #777;
-
   text-align: center;
 }
 
@@ -619,7 +584,6 @@ body {
 
 .contenido-hotel h3 {
   margin-bottom: 9px;
-
   color: #145c93;
   font-size: 1.35rem;
 }
@@ -631,9 +595,7 @@ body {
 
 .descripcion-hotel {
   color: #4a4a4a;
-
   line-height: 1.45;
-
   margin-bottom: 12px;
 }
 
@@ -641,120 +603,424 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   margin-top: 10px;
   padding-top: 12px;
-
   border-top: 1px solid #ddd;
 }
 
-.precio-hotel span {
-  color: #444;
-}
+.precio-hotel span { color: #444; }
 
 .precio-hotel strong {
   color: #145c93;
   font-size: 1.15rem;
 }
 
-/* ---------- Habitaciones ---------- */
-
-.seccion-habitaciones {
-  margin-top: 25px;
+.ocupacion-hotel {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #060b67;
 }
 
-.lista-habitaciones {
+.ocupacion-hotel strong { color: #145c93; }
+
+.hotel-lleno {
+  margin-top: 8px;
+  padding: 4px 10px;
+  background: #f8d7da;
+  color: #a30000;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.hotel-bloqueado {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   ESTILOS MEJORADOS PARA EL PANEL DE FECHAS DE HABITACIÓN
+   ===================================================== */
+
+.habitacion-ocupada {
+  opacity: 0.55;
+}
+
+.etiqueta-estado {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.etiqueta-estado.disponible {
+  background: #dff0d8;
+  color: #2e7d32;
+}
+
+.etiqueta-estado.ocupada {
+  background: #f8d7da;
+  color: #a30000;
+}
+
+.panel-fechas {
+  margin-top: 15px;
+  padding: 16px 18px;
+  border-top: 1px solid #e2d9cf;
+  background: #f9f5f0;
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.campo-fecha {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.campo-fecha label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #060b67;
+}
+
+.campo-fecha input[type="date"] {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #cbbfae;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: #222;
+  background-color: #ffffff;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.campo-fecha input[type="date"]:focus {
+  border-color: #145c93;
+  box-shadow: 0 0 0 3px rgba(20, 92, 147, 0.15);
+}
+
+.resumen-fecha {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #145c93;
+  margin-top: 4px;
+  text-align: center;
+}
+
+.error-fecha {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #a30000;
+  margin-top: 4px;
+  text-align: center;
+}
+
+.boton-confirmar-habitacion {
+  width: 100%;
+  padding: 10px 16px;
+  margin-top: 6px;
+  background-color: #ffb700;
+  color: #060b67;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.boton-confirmar-habitacion:hover:not(:disabled) {
+  background-color: #e6a500;
+}
+
+.boton-confirmar-habitacion:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.boton-confirmar-habitacion:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   INTERFAZ DE HOTELES NUEVA
+   ===================================================== */
+
+.contenedor-hoteles-nueva {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.encabezado-hoteles {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.encabezado-hoteles h1 {
+  margin-bottom: 10px;
+}
+
+.lista-hoteles-nueva {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
 }
 
-.seccion-habitaciones .tarjeta-habitacion {
-  padding: 0;
-
+.tarjeta-hotel-nueva {
+  display: flex;
+  min-height: 230px;
   background: #fffaf5;
   border: 1px solid #ded8d0;
-  border-radius: 14px;
-
+  border-radius: 15px;
   overflow: hidden;
-
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-
   cursor: pointer;
-
-  transition: transform 0.2s ease,
-              box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.seccion-habitaciones .tarjeta-habitacion:hover {
+.tarjeta-hotel-nueva:hover {
   transform: translateY(-4px);
-
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.13);
 }
 
-.seccion-habitaciones .tarjeta-habitacion.seleccionada {
-  border: 3px solid #145c93;
+.foto-hotel,
+.tarjeta-hotel-nueva img {
+  width: 42%;
+  min-width: 42%;
+  height: 230px;
+  object-fit: cover;
 }
 
-.imagen-habitacion {
-  height: 145px;
-
+.imagen-hotel-sin-foto,
+.imagen-sin-foto-nueva {
+  width: 42%;
+  min-width: 42%;
+  height: 230px;
   display: flex;
   align-items: center;
   justify-content: center;
-
   background: #e9e2db;
+  color: #777;
+}
 
+.contenido-hotel-nueva,
+.contenido-hotel-nuevo {
+  flex: 1;
+  padding: 20px;
+}
+
+.contenido-hotel-nuevo h2,
+.contenido-hotel-nueva h2 {
+  color: #145c93;
+  margin-bottom: 10px;
+  font-size: 1.35rem;
+}
+
+.contenido-hotel-nuevo p {
+  margin-bottom: 8px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.precio-hotel-nuevo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #ddd;
+}
+
+.precio-hotel-nuevo strong {
+  color: #145c93;
+}
+
+.boton-ver-habitaciones,
+.boton-habitaciones {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  background: #060b67;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.boton-ver-habitaciones:hover,
+.boton-habitaciones:hover {
+  background: #145c93;
+}
+
+.hotel-lleno-nueva {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.sin-hoteles {
+  text-align: center;
+  padding: 40px;
+}
+
+.boton-volver {
+  margin-bottom: 25px;
+  padding: 9px 16px;
+  background: white;
+  color: #060b67;
+  border: 1px solid #060b67;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.boton-volver:hover {
+  background: #060b67;
+  color: white;
+}
+
+/* =====================================================
+   INTERFAZ DE HABITACIONES NUEVA
+   ===================================================== */
+
+.contenedor-habitaciones-nueva {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 30px 60px;
+}
+
+.encabezado-habitaciones {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.encabezado-habitaciones h1 {
+  color: #172033;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.encabezado-habitaciones p {
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.lista-habitaciones-nueva {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.tarjeta-habitacion-nueva {
+  background: #fffaf5;
+  border: 1px solid #ded8d0;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarjeta-habitacion-nueva:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.13);
+}
+
+.foto-habitacion,
+.tarjeta-habitacion-nueva img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.imagen-habitacion-nueva {
+  width: 100%;
+  height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e9e2db;
   font-size: 50px;
 }
 
-.contenido-habitacion {
+.contenido-habitacion-nueva {
   padding: 18px;
 }
 
-.contenido-habitacion h3 {
-  margin-bottom: 14px;
-
+.contenido-habitacion-nueva h2 {
   color: #145c93;
   font-size: 1.15rem;
+  margin-bottom: 14px;
 }
 
-.datos-habitacion {
+.datos-habitacion-nueva {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-
-  padding-bottom: 14px;
-  margin-bottom: 12px;
-
+  flex-direction: column;
+  gap: 7px;
+  padding-bottom: 13px;
+  margin-bottom: 13px;
   border-bottom: 1px solid #ddd;
-
   color: #555;
   font-size: 0.9rem;
 }
 
-.precio-habitacion {
+.precio-habitacion-nueva {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 15px 0;
 }
 
-.precio-habitacion span {
-  color: #444;
+.precio-habitacion-nueva span {
+  color: #555;
+  font-size: 0.9rem;
 }
 
-.precio-habitacion strong {
+.precio-habitacion-nueva strong {
   color: #145c93;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+}
+
+.estado-habitacion {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.estado-disponible {
+  background: #dff0d8;
+  color: #2e7d32;
+}
+
+.estado-ocupada {
+  background: #f8d7da;
+  color: #a30000;
+}
+
+.habitacion-ocupada-nueva {
+  opacity: 0.6;
 }
 
 .sin-habitaciones {
   padding: 20px;
-
   background: #fffaf5;
   border-radius: 12px;
-
   color: #555;
+  text-align: center;
 }
 
 /* =====================================================
@@ -762,18 +1028,18 @@ body {
    ===================================================== */
 
 @media (max-width: 1100px) {
-
   .informacion-viaje {
     grid-template-columns: 1fr;
   }
+}
 
-  .lista-habitaciones {
-    grid-template-columns: repeat(2, 1fr);
+@media (max-width: 900px) {
+  .lista-hoteles-nueva {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 700px) {
-
   .contenedor-crear-viaje {
     padding: 30px 18px 45px;
   }
@@ -796,319 +1062,19 @@ body {
     min-width: 100%;
     height: 190px;
   }
+}
 
-  .lista-habitaciones {
-    grid-template-columns: 1fr;
+@media (max-width: 600px) {
+  .tarjeta-hotel-nueva {
+    flex-direction: column;
   }
-  /* ===== CALENDARIO DE RESERVA POR HABITACIÓN ===== */
-.habitacion-ocupada {
-  opacity: 0.55;
-}
 
-.etiqueta-estado {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.etiqueta-estado.disponible {
-  background: #dff0d8;
-  color: #2e7d32;
-}
-
-.etiqueta-estado.ocupada {
-  background: #f8d7da;
-  color: #a30000;
-}
-
-.panel-fechas {
-  padding: 16px 18px;
-  border-top: 1px solid #e2d9cf;
-  background: #f9f5f0;
-}
-
-.campo-fecha {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-bottom: 10px;
-}
-
-.campo-fecha label {
-  font-size: 0.8rem;
-  color: #060b67;
-}
-
-.campo-fecha input[type="date"] {
-  padding: 8px 10px;
-  border: 1px solid #cbbfae;
-  border-radius: 8px;
-  font-size: 0.9rem;
-}
-
-.resumen-fecha {
-  margin: 8px 0;
-  font-weight: 600;
-  color: #145c93;
-}
-
-.error-fecha {
-  margin: 8px 0;
-  color: #a30000;
-  font-size: 0.85rem;
-}
-
-.boton-confirmar-habitacion {
-  width: 100%;
-  padding: 10px;
-  margin-top: 6px;
-
-  background: #ffb700;
-  border: none;
-  border-radius: 10px;
-
-  font-weight: 700;
-  color: #060b67;
-  cursor: pointer;
-}
-
-.boton-confirmar-habitacion:hover {
-  background: #e6a500;
-}
-
-.boton-confirmar-habitacion:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-/* ===== OCUPACIÓN DEL HOTEL ===== */
-.ocupacion-hotel {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-  font-size: 0.9rem;
-  color: #060b67;
-}
-
-.ocupacion-hotel strong {
-  color: #145c93;
-}
-
-.hotel-lleno {
-  margin-top: 8px;
-  padding: 4px 10px;
-
-  background: #f8d7da;
-  color: #a30000;
-  border-radius: 8px;
-
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-align: center;
-}
-
-.hotel-bloqueado {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-}
-
-
-.auth-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-  padding: 16px;
-}
-
-.auth-modal-card {
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 32px;
-  width: 100%;
-  max-width: 440px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border: 1px solid #f3f4f6;
-  position: relative;
-  box-sizing: border-box;
-}
-
-.auth-input-field {
-  width: 100%;
-  border: 1px solid #e5e7eb;
-  background-color: #f9fafb;
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-size: 14px;
-  outline: none;
-  box-sizing: border-box;
-  transition: all 0.2s ease;
-}
-
-.auth-input-field:focus {
-  background-color: #ffffff;
-  border-color: #c59b27;
-  box-shadow: 0 0 0 3px rgba(197, 155, 39, 0.15);
-}
-
-.auth-submit-btn {
-  width: 100%;
-  background-color: #c59b27;
-  color: white;
-  font-weight: bold;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.auth-submit-btn:hover {
-  background-color: #b08821;
-}
-
-.auth-submit-btn:active {
-  transform: scale(0.98);
-}
-/* ---------- Estilos refinados para el Modal de Autenticación ---------- */
-
-.auth-title {
-  font-size: 1.75rem;
-  color: #060B67;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-
-.auth-subtitle {
-  font-size: 0.95rem;
-  color: #555;
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.auth-grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.auth-label {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #060B67;
-  margin-bottom: 0.2rem;
-}
-
-.auth-close-btn {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  background: #f3f4f6;
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: #444;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.auth-close-btn:hover {
-  background-color: #e5e7eb;
-}
-
-/* Alertas de error / éxito dentro del modal */
-.auth-alert {
-  padding: 0.75rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  text-align: center;
-  margin-top: 0.5rem;
-}
-
-.auth-alert-error {
-  background-color: #f8d7da;
-  color: #a30000;
-}
-
-.auth-alert-success {
-  background-color: #dff0d8;
-  color: #2e7d32;
-}
-
-/* Contenedor y enlace inferior para alternar entre Login y Registro */
-.auth-switch-container {
-  text-align: center;
-  margin-top: 1.5rem;
-}
-
-.auth-switch-btn {
-  background: none;
-  border: none;
-  color: #145c93;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0;
-  transition: color 0.2s ease, text-decoration 0.2s ease;
-}
-
-.auth-switch-btn:hover {
-  color: #c59b27;
-  text-decoration: underline;
-}
-
-/* Vista cuando ya se ha iniciado sesión */
-.auth-logged-container {
-  text-align: center;
-  padding: 1rem 0;
-}
-
-.auth-session-box {
-  margin: 1rem 0 1.5rem 0;
-  color: #444;
-  font-size: 0.95rem;
-}
-
-.auth-session-email {
-  font-weight: bold;
-  color: #145c93;
-}
-
-.auth-logout-btn {
-  width: 100%;
-  background-color: #e53e3e;
-  color: white;
-  font-weight: bold;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.auth-logout-btn:hover {
-  background-color: #c53030;
+  .foto-hotel,
+  .tarjeta-hotel-nueva img,
+  .imagen-sin-foto-nueva,
+  .imagen-hotel-sin-foto {
+    width: 100%;
+    min-width: 100%;
+    height: 200px;
+  } 
 }
