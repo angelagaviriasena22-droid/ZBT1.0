@@ -85,3 +85,19 @@ export interface Actividad {
   contacto: string | null;
   foto_referencia: string | null;
 }
+
+export interface Feria {
+  id_feria: number;
+  id_depto: number | null;
+  id_destino: number | null;
+  nombre: string;
+  tipo: "feria" | "oferta";
+  descripcion: string | null;
+  foto_referencia: string | null;
+  fecha_inicio: string | null;
+  fecha_fin: string | null;
+  descuento_porcentaje: number | null;
+  activo: boolean;
+  nombre_depto: string | null;
+  nombre_destino: string | null;
+}

@@ -58,6 +58,280 @@ body {
   text-decoration: underline;
 }
 
+/* ---------- Botones de filtro del navbar ---------- */
+.navbar-botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-items: center;
+}
+
+.navbar-boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background-color: transparent;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.navbar-boton:hover {
+  transform: translateY(-1px);
+}
+
+.navbar-boton-inicio {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.navbar-boton-inicio:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.navbar-boton-ferias {
+  background-color: #F1EAE3;
+  color: #060B67;
+  border-color: #F1EAE3;
+}
+
+.navbar-boton-ferias:hover {
+  background-color: #e3d9cc;
+}
+
+.navbar-boton-ofertas {
+  background-color: #FFB700;
+  color: #060B67;
+  border-color: #FFB700;
+}
+
+.navbar-boton-ofertas:hover {
+  background-color: #e6a400;
+}
+
+.navbar-sesion a {
+  color: white;
+  font-size: 0.85rem;
+  text-decoration: none;
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+.navbar-sesion a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* ---------- Barra de búsqueda debajo del navbar ---------- */
+.navbar-buscador-contenedor {
+  background-color: #145C93;
+  padding: 1.1rem 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.navbar-buscador {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 700px;
+  background-color: white;
+  border-radius: 999px;
+  padding: 0.55rem 0.6rem 0.55rem 1.2rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-buscador-icono {
+  color: #145C93;
+  font-size: 1rem;
+}
+
+.navbar-buscador input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  color: #222;
+  background: transparent;
+}
+
+.navbar-buscador input::placeholder {
+  color: #888;
+}
+
+.navbar-buscador-boton {
+  margin: 0;
+  padding: 0.5rem 1.3rem;
+  border-radius: 999px;
+  background-color: #FFB700;
+  color: #060B67;
+  font-weight: 700;
+}
+
+.navbar-buscador-boton:hover:not(:disabled) {
+  background-color: #e6a400;
+}
+
+@media (max-width: 900px) {
+  .navbar {
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .navbar-botones {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .navbar-buscador-contenedor {
+    padding: 1rem;
+  }
+}
+
+/* ---------- Modal de Ferias / Ofertas / Búsqueda ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(6, 11, 103, 0.55);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 4vh 1rem;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.modal-ferias {
+  width: 100%;
+  max-width: 900px;
+  background-color: #F1EAE3;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.modal-ferias-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.6rem;
+  background-color: #060B67;
+  color: white;
+}
+
+.modal-ferias-encabezado h2 {
+  font-size: 1.25rem;
+}
+
+.modal-cerrar {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+}
+
+.modal-cerrar:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.modal-ferias-contenido {
+  padding: 1.5rem 1.6rem 2rem;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.modal-mensaje {
+  text-align: center;
+  color: #555;
+  padding: 1.5rem 0;
+}
+
+.lista-ferias {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+
+.tarjeta-feria {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.tarjeta-feria img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.tarjeta-feria-cuerpo {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.tarjeta-feria-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.tarjeta-feria-encabezado h3 {
+  color: #145C93;
+  font-size: 1.05rem;
+}
+
+.etiqueta-descuento {
+  background-color: #FFB700;
+  color: #060B67;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.tarjeta-feria-ubicacion {
+  font-size: 0.85rem;
+  color: #145C93;
+  font-weight: 600;
+}
+
+.tarjeta-feria-cuerpo p {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.tarjeta-feria-fechas {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.2rem;
+}
+
+.tarjeta-feria-oferta {
+  border-top: 4px solid #FFB700;
+}
+
+.tarjeta-feria-feria {
+  border-top: 4px solid #145C93;
+}
 /* ---------- Componentes de Home / Hero ---------- */
 .linea-separadora {
   width: 80px;
@@ -104,7 +378,7 @@ body {
 .hero {
   text-align: center;
   max-width: 850px;
-  margin: -2rem auto 3rem auto;
+  margin: 2.5rem auto 3rem auto;
   padding: 2rem 2.5rem;
   background-color: #F1EAE3;
   color: #222;
@@ -379,13 +653,55 @@ body {
   color: #333333;
   text-align: center;
 }
+/* ---------- Detalle de destino: mismo "cuadrito" que la descripción del depto ---------- */
+.contenido-detalle {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
 
+.cima-destino {
+  max-width: 800px;
+  margin: 1.2rem auto 0;
+  padding: 0.6rem 1.2rem;
+  background-color: #F1EAE3;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #145C93;
+  text-align: center;
+}
+
+.generalidades-destino {
+  max-width: 800px;
+  margin: 1rem auto 0;
+  padding: 1.5rem 2rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #333333;
+  text-align: center;
+}
+
+.acciones-detalle {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 1.5rem;
+  padding: 0 1rem;
+}
+
+.acciones-detalle .boton {
+  font-size: 1.15rem;
+  padding: 0.9rem 2.2rem;
+}
 /* ---------- Carrusel ---------- */
+/* ---------- Carrusel (gastronomía, actividades, transporte) ---------- */
+/* ---------- Carrusel (gastronomía, actividades, transporte) ---------- */
 .seccion-carrusel {
   margin: 2.5rem 0;
   padding: 0 2rem;
 }
-
 .seccion-carrusel h2 {
   color: #060B67;
   margin-bottom: 1rem;
