@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import ModalFerias, { type ModoModalFerias } from "./ModalFerias";
 
 function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const enInicio = location.pathname === "/";
 
   const [busqueda, setBusqueda] = useState("");
@@ -44,6 +45,32 @@ function Navbar() {
               onClick={() => setModalAbierto("oferta")}
             >
               ⚡ Ofertas Relámpago
+            </button>
+
+            {/* Nuevo Botón: Haz parte de Zafiro Bloom Tours */}
+            <button
+              type="button"
+              onClick={() => navigate('/haz-parte')}
+              style={{
+                background: 'transparent',
+                border: '1px solid #ffb703',
+                color: '#ffb703',
+                padding: '8px 16px',
+                borderRadius: '20px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = '#ffb703';
+                e.currentTarget.style.color = '#000';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.color = '#ffb703';
+              }}
+            >
+              🌿 Haz parte de Zafiro Bloom Tours
             </button>
           </div>
         )}
