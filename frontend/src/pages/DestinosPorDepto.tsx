@@ -1,26 +1,25 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import api from "../services";
+import { obtenerDetallesDepartamento } from "../services/destinosService";
 import type { Depto, Destino } from "../types";
 import DestinoCard from "../components/DestinoCard";
+import "./DestinosPorDepto.css"; // Importamos los estilos desde la misma carpeta
 
 function DestinosPorDepto() {
-  const { idDepto } = useParams();
+  const { idDepto } = useParams<{ idDepto: string }>();
   const [depto, setDepto] = useState<Depto | null>(null);
   const [destinos, setDestinos] = useState<Destino[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setCargando(true);
+    if (!idDepto) return;
     
-    Promise.all([
-      api.get<Depto>(`/deptos/${idDepto}`),
-      api.get<Destino[]>(`/destinos/?id_depto=${idDepto}`),
-    ])
-      .then(([respDepto, respDestinos]) => {
-        setDepto(respDepto.data);
-        setDestinos(respDestinos.data);
+    setCargando(true);
+    obtenerDetallesDepartamento(idDepto)
+      .then(({ depto, destinos }) => {
+        setDepto(depto);
+        setDestinos(destinos);
       })
       .catch(() => setError("No se pudo cargar la información del departamento"))
       .finally(() => setCargando(false));

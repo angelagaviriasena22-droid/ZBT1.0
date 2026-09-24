@@ -5,6 +5,7 @@ from app.routers import (
     actividades,
     destinos,
     deptos,
+    ferias,
     gastronomia,
     habitaciones,
     hoteles,
@@ -37,7 +38,7 @@ app.include_router(viajes.router)
 app.include_router(actividades.router)
 app.include_router(gastronomia.router)
 app.include_router(transporte.router)
-
+app.include_router(ferias.router)
 @app.get("/")
 def root():
     return {"mensaje": "API Funcionando Correctamente"}

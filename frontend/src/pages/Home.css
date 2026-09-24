@@ -1,0 +1,49 @@
+.hero {
+  text-align: center;
+  padding: 4rem 1rem;
+  background: linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.85)), url('../assets/hero-bg.jpg') no-repeat center center;
+  background-size: cover;
+  color: #fff;
+  margin-bottom: 2rem;
+}
+
+.hero h1 {
+  font-size: 2.8rem;
+  color: #ffb703;
+  margin-bottom: 1rem;
+}
+
+.hero .lema {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: #c5c5c5;
+}
+
+.contenedor-departamentos {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem 3rem 1rem;
+}
+
+.contenedor-departamentos h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  text-align: center;
+}
+
+.error {
+  color: #ff4d4d;
+  text-align: center;
+  font-size: 1.1rem;
+  margin: 1rem 0;
+}
+
+.lista-departamentos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}

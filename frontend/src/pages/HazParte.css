@@ -1,0 +1,89 @@
+.haz-parte-container {
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  color: #fff;
+}
+
+.haz-parte-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.haz-parte-titulo {
+  font-size: 2.5rem;
+  color: #ffb703;
+  margin-bottom: 15px;
+}
+
+.haz-parte-descripcion {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #c5c5c5; /* Ajustado para que resalte bien sobre fondo oscuro */
+}
+
+.haz-parte-roles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+.haz-parte-card {
+  background: #0a192f;
+  padding: 25px;
+  borderRadius: 12px;
+  border: 1px solid #172a45;
+  border-radius: 12px;
+}
+
+.haz-parte-card-admin {
+  color: #ffb703;
+  margin-bottom: 15px;
+}
+
+.haz-parte-card-super {
+  color: #ff6b6b;
+  margin-bottom: 15px;
+}
+
+.haz-parte-card-texto {
+  color: #8892b0;
+  line-height: 1.5;
+}
+
+.haz-parte-cta-box {
+  background: #112240;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.haz-parte-cta-titulo {
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.haz-parte-cta-texto {
+  color: #8892b0;
+  margin-bottom: 25px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.haz-parte-boton {
+  background: #ffb703;
+  color: #000;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.haz-parte-boton:hover {
+  background: #e5a402;
+}

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import api from "../services";
+import { obtenerDepartamentos } from "../services/homeService";
 import type { Depto } from "../types";
 import DepartamentoCard from "../components/DepartamentoCard";
+import "./Home.css"; // Importamos los estilos de la página
 
 function Home() {
   const [departamentos, setDepartamentos] = useState<Depto[]>([]);
@@ -9,9 +10,8 @@ function Home() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    api
-      .get<Depto[]>("/deptos/")
-      .then((respuesta) => setDepartamentos(respuesta.data))
+    obtenerDepartamentos()
+      .then((data) => setDepartamentos(data))
       .catch(() => setError("No se pudieron cargar los departamentos"))
       .finally(() => setCargando(false));
   }, []);
@@ -20,14 +20,15 @@ function Home() {
     <div>
       <section className="hero">
         <h1>Conecta con nuevos lugares</h1>
-        <p className="lema">✈️ Bienvenidos a Zafiro Bloom Tours
-Descubre destinos increíbles y vive experiencias inolvidables. Encuentra los mejores paquetes turísticos para disfrutar tus vacaciones con comodidad, seguridad y los mejores precios</p>
+        <p className="lema">
+          ✈️ Bienvenidos a Zafiro Bloom Tours. Descubre destinos increíbles y vive experiencias inolvidables. Encuentra los mejores paquetes turísticos para disfrutar tus vacaciones con comodidad, seguridad y los mejores precios.
+        </p>
       </section>
 
       <section className="contenedor-departamentos">
-        <h2>Explora por departamento </h2>
+        <h2>Explora por departamento</h2>
 
-        {cargando && <p>Cargando departamentos...</p>}
+        {cargando && <p style={{ textAlign: 'center', color: '#8892b0' }}>Cargando departamentos...</p>}
         {error && <p className="error">{error}</p>}
 
         <div className="lista-departamentos">

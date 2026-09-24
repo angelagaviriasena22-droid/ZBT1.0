@@ -86,8 +86,25 @@ export interface Actividad {
   foto_referencia: string | null;
 }
 
+<<<<<<< HEAD
 export interface Informativa {
   descripcion: string | null;
   contacto: string | null;
   foto_referencia?: string | null;
+=======
+export interface Feria {
+  id_feria: number;
+  id_depto: number | null;
+  id_destino: number | null;
+  nombre: string;
+  tipo: "feria" | "oferta";
+  descripcion: string | null;
+  foto_referencia: string | null;
+  fecha_inicio: string | null;
+  fecha_fin: string | null;
+  descuento_porcentaje: number | null;
+  activo: boolean;
+  nombre_depto: string | null;
+  nombre_destino: string | null;
+>>>>>>> 57b6c64a87621c0c2ca88a7da6673f9a8b773b8a
 }

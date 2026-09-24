@@ -48,24 +48,20 @@ function DetalleDestino() {
 
       {!destino.foto_referencia && <h1>{destino.nombre}</h1>}
 
-      <section className="contenido-detalle">
-        {destino.cima && (
-          <p className="cima-destino">
-            <strong>Clima:</strong> {destino.cima}
-          </p>
-        )}
+      <div className="fila-detalle">
+        <section className="contenido-detalle">
+          {destino.cima && (
+            <p className="cima-destino">
+              <strong>Clima:</strong> {destino.cima}
+            </p>
+          )}
 
-        {destino.generalidades && (
-          <p className="generalidades-destino">{destino.generalidades}</p>
-        )}
+          {destino.generalidades && (
+            <p className="generalidades-destino">{destino.generalidades}</p>
+          )}
+        </section>
 
         <div className="acciones-detalle">
-          <button
-            className="boton"
-            onClick={() => navigate(`/hoteles/${destino.id_destino}`)}
-          >
-            Ver hoteles
-          </button>
           <button
             className="boton"
             onClick={() => navigate(`/crear-viaje/${destino.id_destino}`)}
@@ -73,7 +69,7 @@ function DetalleDestino() {
             Planear viaje aquí
           </button>
         </div>
-      </section>
+      </div>
 
       {gastronomia.length > 0 && (
         <section className="seccion-carrusel">

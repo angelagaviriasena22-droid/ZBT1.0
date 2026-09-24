@@ -1,30 +1,28 @@
 from pydantic import BaseModel, EmailStr
-from datetime import datetime
 from typing import Optional
-
+from datetime import datetime
 
 class UsuarioCreate(BaseModel):
     id_usuario: str
     nombre: str
-    apellidos: Optional[str] = None
+    apellidos: str
     ciudad: Optional[str] = None
     direccion: Optional[str] = None
     correo: EmailStr
     telefono: Optional[str] = None
-    rol: Optional[str] = "turista"
     contrasena: str
+    rol: Optional[str] = "usuario"
 
+class UsuarioLogin(BaseModel):
+    correo: EmailStr
+    contrasena: str
 
 class UsuarioOut(BaseModel):
     id_usuario: str
     nombre: str
-    apellidos: Optional[str]
-    ciudad: Optional[str]
-    direccion: Optional[str]
+    apellidos: str
     correo: EmailStr
-    telefono: Optional[str]
-    rol: Optional[str]
-    fecha_registro: Optional[datetime]
+    rol: str
 
     class Config:
         from_attributes = True
