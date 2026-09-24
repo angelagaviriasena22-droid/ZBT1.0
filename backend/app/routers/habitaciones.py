@@ -1,29 +1,37 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+
 from app.database.connection import get_db
-from app.models.habitación import Habitacion
 from app.schemas.habitación import HabitacionOut
 
-router = APIRouter(prefix="/habitaciones", tags=["Habitaciones"])
+from app.services.habitacion_service import (
+    listar_habitaciones,
+    obtener_habitacion
+)
+
+
+router = APIRouter(
+    prefix="/habitaciones",
+    tags=["Habitaciones"]
+)
 
 
 @router.get("/", response_model=list[HabitacionOut])
-def listar_habitaciones(
+def obtener_habitaciones(
     id_hotel: int | None = None,
     solo_disponibles: bool = False,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_db)
 ):
-    query = db.query(Habitacion)
-    if id_hotel:
-        query = query.filter(Habitacion.id_hotel == id_hotel)
-    if solo_disponibles:
-        query = query.filter(Habitacion.estado == "disponible")
-    return query.all()
+    return listar_habitaciones(
+        db,
+        id_hotel,
+        solo_disponibles
+    )
 
 
 @router.get("/{id_habitacion}", response_model=HabitacionOut)
-def obtener_habitacion(id_habitacion: int, db: Session = Depends(get_db)):
-    habitacion = db.query(Habitacion).filter(Habitacion.id_habitacion == id_habitacion).first()
-    if not habitacion:
-        raise HTTPException(status_code=404, detail="Habitación no encontrada")
-    return habitacion
+def obtener_habitacion_endpoint(
+    id_habitacion: int,
+    db: Session = Depends(get_db)
+):
+    return obtener_habitacion(db, id_habitacion)
