@@ -101,3 +101,9 @@ export interface Feria {
   nombre_depto: string | null;
   nombre_destino: string | null;
 }
+
+// Agregada para que coincida perfectamente con los componentes informativos
+export interface Informativa {
+  descripcion: string | null;
+  contacto: string | null;
+}

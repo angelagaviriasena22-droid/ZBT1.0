@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../services";
 import type { Destino, Gastronomia, Transporte, Actividad } from "../types";
+import { destinosService } from "../services/destinoService";
+import { CarruselSeccion } from "../components/CarruselSeccion";
 
 function DetalleDestino() {
-  const { idDestino } = useParams();
+  const { idDestino } = useParams<{ idDestino: string }>();
   const navigate = useNavigate();
+
   const [destino, setDestino] = useState<Destino | null>(null);
   const [gastronomia, setGastronomia] = useState<Gastronomia[]>([]);
   const [transporte, setTransporte] = useState<Transporte[]>([]);
@@ -14,12 +16,14 @@ function DetalleDestino() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (!idDestino) return;
+
     setCargando(true);
     Promise.all([
-      api.get<Destino>(`/destinos/${idDestino}`),
-      api.get<Gastronomia[]>(`/gastronomia/?id_destino=${idDestino}`),
-      api.get<Transporte[]>(`/transporte/?id_destino=${idDestino}`),
-      api.get<Actividad[]>(`/actividades/?id_destino=${idDestino}`),
+      destinosService.getDestinoPorId(idDestino),
+      destinosService.getGastronomiaPorDestino(idDestino),
+      destinosService.getTransportePorDestino(idDestino),
+      destinosService.getActividadesPorDestino(idDestino),
     ])
       .then(([respDestino, respGastro, respTrans, respAct]) => {
         setDestino(respDestino.data);
@@ -71,53 +75,9 @@ function DetalleDestino() {
         </div>
       </div>
 
-      {gastronomia.length > 0 && (
-        <section className="seccion-carrusel">
-          <h2>Gastronomía típica</h2>
-          <div className="carrusel">
-            {gastronomia.map((item) => (
-              <div key={item.id_gastronomia} className="carrusel-item">
-                {item.foto_referencia && (
-                  <img src={item.foto_referencia} alt="Gastronomía" />
-                )}
-                <p>{item.descripcion}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {actividades.length > 0 && (
-        <section className="seccion-carrusel">
-          <h2>Actividades</h2>
-          <div className="carrusel">
-            {actividades.map((item) => (
-              <div key={item.id_actividades} className="carrusel-item">
-                {item.foto_referencia && (
-                  <img src={item.foto_referencia} alt="Actividad" />
-                )}
-                <p>{item.descripcion}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {transporte.length > 0 && (
-        <section className="seccion-carrusel">
-          <h2>Transporte</h2>
-          <div className="carrusel">
-            {transporte.map((item) => (
-              <div key={item.id_transporte} className="carrusel-item">
-                {item.foto_referencia && (
-                  <img src={item.foto_referencia} alt="Transporte" />
-                )}
-                <p>{item.descripcion}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      <CarruselSeccion titulo="Gastronomía típica" items={gastronomia} />
+      <CarruselSeccion titulo="Actividades" items={actividades} />
+      <CarruselSeccion titulo="Transporte" items={transporte} />
     </div>
   );
 }
