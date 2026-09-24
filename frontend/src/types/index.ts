@@ -10,7 +10,7 @@ export interface Destino {
   id_depto: number | null;
   nombre: string;
   foto_referencia: string | null;
-  cima: string | null;
+  clima: string | null;
   generalidades: string | null;
   id_contacto: string | null;
   fecha_registro: string | null;
@@ -84,4 +84,10 @@ export interface Actividad {
   descripcion: string | null;
   contacto: string | null;
   foto_referencia: string | null;
+}
+
+export interface Informativa {
+  descripcion: string | null;
+  contacto: string | null;
+  foto_referencia?: string | null;
 }

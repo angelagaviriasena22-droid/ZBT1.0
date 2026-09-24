@@ -1,28 +1,30 @@
 import { useNavigate } from "react-router-dom";
-import type { Destino } from "../types";
+import type { Depto } from "../types";
 
 interface Props {
-  destino: Destino;
+  departamento: Depto;
 }
 
-function DestinoCard({ destino }: Props) {
+function DepartamentoCard({ departamento }: Props) {
   const navigate = useNavigate();
 
   return (
-    <div className="tarjeta-destino">
-      {destino.foto_referencia && (
-        <img src={destino.foto_referencia} alt={destino.nombre} className="imagen-tarjeta" />
-      )}
-      <h3>{destino.nombre}</h3>
-      <p>{destino.generalidades}</p>
+    <div className="tarjeta-departamento">
+      <img
+        src={departamento.foto_referencia ?? ""}
+        alt={departamento.nombre}
+        className="imagen-tarjeta"
+      />
+      <h3>{departamento.nombre}</h3>
+      {departamento.descripcion && <p>{departamento.descripcion}</p>}
       <button
         className="boton"
-        onClick={() => navigate(`/destino/${destino.id_destino}`)}
+        onClick={() => navigate(`/destinos/${departamento.id_depto}`)}
       >
-        Ver más
+        Ver destinos
       </button>
     </div>
   );
 }
 
-export default DestinoCard;
+export default DepartamentoCard;

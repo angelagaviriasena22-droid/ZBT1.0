@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services";
 import type { Hotel, Habitacion } from "../types";
-
-const ID_USUARIO_INVITADO = "invitado";
+import { AuthModal } from "../components/AuthModal";
+import { authService, type User } from "../services/authService";
 
 interface Informativa {
   descripcion: string | null;
@@ -17,21 +17,34 @@ interface FechasHabitacion {
   error: string | null;
 }
 
-function CrearViaje() {
+export function CrearViaje() {
   const { idDestino } = useParams();
 
+  // Estados de información general
   const [gastronomia, setGastronomia] = useState<Informativa[]>([]);
   const [transporte, setTransporte] = useState<Informativa[]>([]);
   const [actividades, setActividades] = useState<Informativa[]>([]);
 
+  // Hoteles y Habitaciones
   const [hoteles, setHoteles] = useState<Hotel[]>([]);
   const [hotelSeleccionado, setHotelSeleccionado] = useState<Hotel | null>(null);
   const [habitaciones, setHabitaciones] = useState<Habitacion[]>([]);
 
-  const [habitacionExpandida, setHabitacionExpandida] = useState<number | null>(
-    null
-  );
+  const [habitacionExpandida, setHabitacionExpandida] = useState<number | null>(null);
   const [fechasPorHabitacion, setFechasPorHabitacion] = useState<Record<number, FechasHabitacion>>({});
+
+  // Usuario y Modal de Autenticación
+  const [usuario, setUsuario] = useState<User | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [habitacionPendiente, setHabitacionPendiente] = useState<Habitacion | null>(null);
+
+  // Cargar usuario en sesión al montar el componente
+  useEffect(() => {
+    const userGuardado = authService.getCurrentUser();
+    if (userGuardado) {
+      setUsuario(userGuardado);
+    }
+  }, []);
 
   const cargarHoteles = () => {
     api
@@ -40,6 +53,8 @@ function CrearViaje() {
   };
 
   useEffect(() => {
+    if (!idDestino) return;
+
     api
       .get<Informativa[]>(`/gastronomia/?id_destino=${idDestino}`)
       .then((r) => setGastronomia(r.data));
@@ -104,7 +119,49 @@ function CrearViaje() {
     return noches > 0 ? noches : 0;
   };
 
-  const confirmarReserva = async (habitacion: Habitacion) => {
+  // Función interna para procesar el POST de la reserva tras validar autenticación
+  const procesarReservaBackend = async (habitacion: Habitacion, usuarioActual: User) => {
+    const datos = fechasPorHabitacion[habitacion.id_habitacion];
+
+    setFechasPorHabitacion((prev) => ({
+      ...prev,
+      [habitacion.id_habitacion]: { ...datos, enviando: true, error: null },
+    }));
+
+    try {
+      await api.post("/viajes/", {
+        id_usuario: usuarioActual.id_usuario,
+        id_destino: Number(idDestino),
+        id_habitacion: habitacion.id_habitacion,
+        fecha_inicial: datos.fechaInicio,
+        fecha_final: datos.fechaFin,
+      });
+
+      if (hotelSeleccionado) {
+        const r = await api.get<Habitacion[]>(
+          `/habitaciones/?id_hotel=${hotelSeleccionado.id_hotel}`
+        );
+        setHabitaciones(r.data);
+      }
+      cargarHoteles();
+
+      setHabitacionExpandida(null);
+    } catch (err: any) {
+      setFechasPorHabitacion((prev) => ({
+        ...prev,
+        [habitacion.id_habitacion]: {
+          ...datos,
+          enviando: false,
+          error:
+            err?.response?.data?.detail ??
+            "No se pudo confirmar la reserva. Intenta de nuevo.",
+        },
+      }));
+    }
+  };
+
+  // Manejo del click en Confirmar Reserva
+  const confirmarReserva = (habitacion: Habitacion) => {
     const datos = fechasPorHabitacion[habitacion.id_habitacion];
 
     if (!datos?.fechaInicio || !datos?.fechaFin) {
@@ -134,82 +191,52 @@ function CrearViaje() {
       return;
     }
 
-    setFechasPorHabitacion((prev) => ({
-      ...prev,
-      [habitacion.id_habitacion]: { ...datos, enviando: true, error: null },
-    }));
+    // Si el usuario no ha iniciado sesión, abre el modal
+    if (!usuario) {
+      setHabitacionPendiente(habitacion);
+      setIsAuthModalOpen(true);
+      return;
+    }
 
-    try {
-      await api.post("/viajes/", {
-        id_usuario: ID_USUARIO_INVITADO,
-        id_destino: Number(idDestino),
-        id_habitacion: habitacion.id_habitacion,
-        fecha_inicial: datos.fechaInicio,
-        fecha_final: datos.fechaFin,
-      });
+    // Si ya hay usuario autenticado, procesa la reserva
+    procesarReservaBackend(habitacion, usuario);
+  };
 
-      // Los triggers de PostgreSQL ya calcularon el precio, marcaron
-      // la habitación como "ocupada" y actualizaron el porcentaje de
-      // ocupación y el precio promedio del hotel. Recargamos ambas
-      // listas para reflejar los nuevos valores.
-      if (hotelSeleccionado) {
-        const r = await api.get<Habitacion[]>(
-          `/habitaciones/?id_hotel=${hotelSeleccionado.id_hotel}`
-        );
-        setHabitaciones(r.data);
-      }
-      cargarHoteles();
+  // Callback cuando se inicia sesión o registra exitosamente desde AuthModal
+  const handleAuthSuccess = (userLogueado: User) => {
+    setUsuario(userLogueado);
+    setIsAuthModalOpen(false);
 
-      setHabitacionExpandida(null);
-    } catch (err: any) {
-      setFechasPorHabitacion((prev) => ({
-        ...prev,
-        [habitacion.id_habitacion]: {
-          ...datos,
-          enviando: false,
-          error:
-            err?.response?.data?.detail ??
-            "No se pudo confirmar la reserva. Intenta de nuevo.",
-        },
-      }));
+    if (habitacionPendiente) {
+      procesarReservaBackend(habitacionPendiente, userLogueado);
+      setHabitacionPendiente(null);
     }
   };
 
   return (
     <div className="contenedor-crear-viaje">
-
       {/* ENCABEZADO */}
       <header className="encabezado-viaje">
         <h1>Crea tu viaje personalizado</h1>
-        <p>
-          Descubre todo lo que necesitas para disfrutar de tu destino.
-        </p>
-        <p>
-          Gastronomía, transporte, actividades y hospedaje en un solo lugar.
-        </p>
+        <p>Descubre todo lo que necesitas para disfrutar de tu destino.</p>
+        <p>Gastronomía, transporte, actividades y hospedaje en un solo lugar.</p>
       </header>
 
       {/* INFORMACIÓN */}
       <section className="informacion-viaje">
-
         {/* GASTRONOMÍA */}
         <div className="tarjeta-info gastronomia">
           <div className="icono-info">🍴</div>
-
           <div>
             <h2>Gastronomía</h2>
-
             {gastronomia.length === 0 ? (
               <p>Sin información registrada.</p>
             ) : (
               gastronomia.map((item, i) => (
                 <div key={i}>
                   <p>{item.descripcion}</p>
-
                   {item.contacto && (
-                    <p className="contacto">
-                      📞 Contacto: {item.contacto}
-                    </p>
+                    <p className="contacto">📞 Contacto: {item.contacto}</p>
                   )}
                 </div>
               ))
@@ -220,21 +247,16 @@ function CrearViaje() {
         {/* TRANSPORTE */}
         <div className="tarjeta-info transporte">
           <div className="icono-info">🚌</div>
-
           <div>
             <h2>Transporte</h2>
-
             {transporte.length === 0 ? (
               <p>Sin información registrada.</p>
             ) : (
               transporte.map((item, i) => (
                 <div key={i}>
                   <p>{item.descripcion}</p>
-
                   {item.contacto && (
-                    <p className="contacto">
-                      📞 Contacto: {item.contacto}
-                    </p>
+                    <p className="contacto">📞 Contacto: {item.contacto}</p>
                   )}
                 </div>
               ))
@@ -245,21 +267,16 @@ function CrearViaje() {
         {/* ACTIVIDADES */}
         <div className="tarjeta-info actividades">
           <div className="icono-info">🥾</div>
-
           <div>
             <h2>Actividades</h2>
-
             {actividades.length === 0 ? (
               <p>Sin información registrada.</p>
             ) : (
               actividades.map((item, i) => (
                 <div key={i}>
                   <p>{item.descripcion}</p>
-
                   {item.contacto && (
-                    <p className="contacto">
-                      📞 Contacto: {item.contacto}
-                    </p>
+                    <p className="contacto">📞 Contacto: {item.contacto}</p>
                   )}
                 </div>
               ))
@@ -295,29 +312,22 @@ function CrearViaje() {
                     }}
                   />
                 ) : (
-                  <div className="imagen-sin-foto">
-                    Sin imagen disponible
-                  </div>
+                  <div className="imagen-sin-foto">Sin imagen disponible</div>
                 )}
 
                 <div className="contenido-hotel">
                   <h3>{hotel.nombre}</h3>
 
                   {hotel.direccion && (
-                    <p className="direccion">
-                      📍 {hotel.direccion}
-                    </p>
+                    <p className="direccion">📍 {hotel.direccion}</p>
                   )}
 
                   {hotel.descripcion && (
-                    <p className="descripcion-hotel">
-                      {hotel.descripcion}
-                    </p>
+                    <p className="descripcion-hotel">{hotel.descripcion}</p>
                   )}
 
                   <div className="precio-hotel">
                     <span>Precio promedio:</span>
-
                     <strong>
                       $
                       {hotel.precio_promedio?.toLocaleString("es-CO") ??
@@ -347,7 +357,6 @@ function CrearViaje() {
       {/* HABITACIONES */}
       {hotelSeleccionado && (
         <section className="seccion-habitaciones">
-
           <h2 className="titulo-seccion">
             Escoge tu habitación en {hotelSeleccionado.nombre}
           </h2>
@@ -358,7 +367,6 @@ function CrearViaje() {
             </p>
           ) : (
             <div className="lista-habitaciones">
-
               {habitaciones.map((habitacion) => {
                 const datosFecha =
                   fechasPorHabitacion[habitacion.id_habitacion];
@@ -409,7 +417,6 @@ function CrearViaje() {
 
                         <div className="precio-habitacion">
                           <span>Precio por noche:</span>
-
                           <strong>
                             $
                             {habitacion.precio?.toLocaleString("es-CO") ??
@@ -486,11 +493,17 @@ function CrearViaje() {
                   </div>
                 );
               })}
-
             </div>
           )}
         </section>
       )}
+
+      {/* Modal de Registro e Inicio de Sesión */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={handleAuthSuccess}
+      />
     </div>
   );
 }
