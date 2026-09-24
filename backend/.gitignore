@@ -12,3 +12,9 @@ dist/
 
 # VS Code
 .vscode/
+
+backend/venv/
+venv/
+__pycache__/
+*.pyc
+.env
