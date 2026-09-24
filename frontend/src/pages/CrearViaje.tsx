@@ -5,6 +5,7 @@ import { AuthModal } from "../components/AuthModal";
 import { authService, type User } from "../services/authService";
 import { viajesService } from "../services/viajeService";
 import { TarjetaInformacion } from "../components/TarjetaInformacion";
+import { TarjetaHotel } from "../components/TarjetaHotel";
 import Habitaciones from "./Habitaciones";
 
 interface FechasHabitacion {
@@ -76,33 +77,23 @@ export function CrearViaje() {
     campo: "fechaInicio" | "fechaFin",
     valor: string
   ) => {
-    setFechasPorHabitacion((prev) => ({
-<<<<<<< HEAD
-  ...prev,
-  [idHabitacion]: {
-    ...(prev[idHabitacion] ?? {
-      fechaInicio: "",
-      fechaFin: "",
-      enviando: false,
-      error: null,
-    }),
-    [campo]: valor,
-    enviando: false,
-    error: null,
-  },
-}));
-=======
-      ...prev,
-      [idHabitacion]: {
-        fechaInicio: prev[idHabitacion]?.fechaInicio ?? "",
-        fechaFin: prev[idHabitacion]?.fechaFin ?? "",
+    setFechasPorHabitacion((prev) => {
+      const actual = prev[idHabitacion] ?? {
+        fechaInicio: "",
+        fechaFin: "",
         enviando: false,
         error: null,
-        ...prev[idHabitacion],
-        [campo]: valor,
-      },
-    }));
->>>>>>> bb6029ecb92df2a06ca4c664eeaae7cc0b926a97
+      };
+
+      return {
+        ...prev,
+        [idHabitacion]: {
+          ...actual,
+          [campo]: valor,
+          error: null,
+        },
+      };
+    });
   };
 
   const calcularNoches = (fechaInicio: string, fechaFin: string) => {
@@ -124,7 +115,7 @@ export function CrearViaje() {
 
     try {
       await viajesService.crearReserva({
-        id_usuario: usuarioActual.id_usuario,
+        id_usuario: Number(usuarioActual.id_usuario),
         id_destino: Number(idDestino),
         id_habitacion: habitacion.id_habitacion,
         fecha_inicial: datos.fechaInicio,
@@ -157,12 +148,6 @@ export function CrearViaje() {
       setFechasPorHabitacion((prev) => ({
         ...prev,
         [habitacion.id_habitacion]: {
-          ...(prev[habitacion.id_habitacion] ?? {
-            fechaInicio: "",
-            fechaFin: "",
-            enviando: false,
-            error: null,
-          }),
           fechaInicio: datos?.fechaInicio ?? "",
           fechaFin: datos?.fechaFin ?? "",
           enviando: false,
@@ -223,53 +208,13 @@ export function CrearViaje() {
       <section className="seccion-hotel">
         <h2 className="titulo-seccion">Escoge tu hotel</h2>
         <div className="lista-hoteles">
-          {hoteles.map((hotel) => {
-            const lleno = Number(hotel.porcentaje_ocupacion) >= 100;
-
-            return (
-              <div
-                key={hotel.id_hotel}
-                className={`tarjeta-hotel ${
-                  hotelSeleccionado?.id_hotel === hotel.id_hotel ? "seleccionada" : ""
-                } ${lleno ? "hotel-bloqueado" : ""}`}
-                onClick={() => seleccionarHotel(hotel)}
-              >
-                {hotel.foto_referencia ? (
-                  <img
-                    src={hotel.foto_referencia}
-                    alt={hotel.nombre}
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
-                ) : (
-                  <div className="imagen-sin-foto">Sin imagen disponible</div>
-                )}
-
-                <div className="contenido-hotel">
-                  <h3>{hotel.nombre}</h3>
-                  {hotel.direccion && <p className="direccion">📍 {hotel.direccion}</p>}
-                  {hotel.descripcion && <p className="descripcion-hotel">{hotel.descripcion}</p>}
-
-                  <div className="precio-hotel">
-                    <span>Precio promedio:</span>
-                    <strong>
-                      ${hotel.precio_promedio?.toLocaleString("es-CO") ?? "No disponible"}
-                    </strong>
-                  </div>
-
-                  <div className="ocupacion-hotel">
-                    <span>Ocupación:</span>
-                    <strong>
-                      {hotel.porcentaje_ocupacion != null ? `${hotel.porcentaje_ocupacion}%` : "0%"}
-                    </strong>
-                  </div>
-
-                  {lleno && <p className="hotel-lleno">Hotel no disponible</p>}
-                </div>
-              </div>
-            );
-          })}
+          {hoteles.map((hotel) => (
+            <TarjetaHotel
+              key={hotel.id_hotel}
+              hotel={hotel}
+              onVerHabitaciones={() => seleccionarHotel(hotel)}
+            />
+          ))}
         </div>
       </section>
 

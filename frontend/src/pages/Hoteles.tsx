@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type { Hotel } from "../types";
-import { hotelesService } from "../services/hoteleService";
+import { hotelesService } from "../services/hotelService";
 import { TarjetaHotel } from "../components/TarjetaHotel";
 
 function Hoteles() {

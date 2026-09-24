@@ -1,6 +1,7 @@
 import React from "react";
 import type { Hotel, Habitacion } from "../types";
 import { TarjetaHabitacion } from "../components/TarjetaHabitacion";
+import "../styles/modalHabitaciones.css";
 
 interface FechasHabitacion {
   fechaInicio: string;
@@ -37,51 +38,10 @@ export const Habitaciones: React.FC<HabitacionesProps> = ({
   onConfirmarReserva,
 }) => {
   return (
-    <div
-      className="modal-overlay"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "rgba(0, 0, 0, 0.6)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 1000,
-        backdropFilter: "blur(4px)",
-      }}
-    >
-      <div
-        className="modal-contenedor"
-        style={{
-          backgroundColor: "#fff",
-          borderRadius: "16px",
-          padding: "24px",
-          maxWidth: "900px",
-          width: "90%",
-          maxHeight: "85vh",
-          overflowY: "auto",
-          position: "relative",
-          boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
-        }}
-      >
+    <div className="modal-overlay-habitaciones">
+      <div className="modal-contenedor-habitaciones">
         {/* Botón para cerrar */}
-        <button
-          onClick={onClose}
-          style={{
-            position: "absolute",
-            top: "16px",
-            right: "16px",
-            background: "transparent",
-            border: "none",
-            fontSize: "20px",
-            cursor: "pointer",
-            fontWeight: "bold",
-            color: "#666",
-          }}
-        >
+        <button className="boton-cerrar-modal" onClick={onClose}>
           ✕
         </button>
 
