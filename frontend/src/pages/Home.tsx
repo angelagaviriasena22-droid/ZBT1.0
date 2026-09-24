@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { obtenerDepartamentos } from "../services/homeService";
 import type { Depto } from "../types";
 import DepartamentoCard from "../components/DepartamentoCard";
-import "./Home.css"; // Importamos los estilos de la página
+import "../styles/Home.css"; // Importamos los estilos de la página
 
 function Home() {
   const [departamentos, setDepartamentos] = useState<Depto[]>([]);

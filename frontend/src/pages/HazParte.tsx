@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './HazParte.css';
+import "../styles/HazParte.css";
 
 const HazParte: React.FC = () => {
   const navigate = useNavigate();

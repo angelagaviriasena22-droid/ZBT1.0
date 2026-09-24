@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { obtenerDetallesDepartamento } from "../services/destinosService";
 import type { Depto, Destino } from "../types";
 import DestinoCard from "../components/DestinoCard";
-import "./DestinosPorDepto.css"; // Importamos los estilos desde la misma carpeta
+import "../styles/DestinosPorDepto.css"; // Importamos los estilos desde la misma carpeta
 
 function DestinosPorDepto() {
   const { idDepto } = useParams<{ idDepto: string }>();

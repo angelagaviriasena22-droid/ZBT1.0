@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { solicitudService } from '../services/solicitudService'; // 👈 Aquí llamamos al archivo nuevo
-import './SolicitarAcceso.css';
+import "../styles/SolicitarAcceso.css";
 
 const SolicitarAcceso: React.FC = () => {
   const navigate = useNavigate();

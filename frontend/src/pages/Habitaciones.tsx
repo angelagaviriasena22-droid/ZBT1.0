@@ -1,7 +1,7 @@
 import React from "react";
 import type { Hotel, Habitacion } from "../types";
 import { TarjetaHabitacion } from "../components/TarjetaHabitacion";
-import "../styles/modalHabitaciones.css";
+import "../styles/ModalHabitaciones.css";
 
 interface FechasHabitacion {
   fechaInicio: string;
