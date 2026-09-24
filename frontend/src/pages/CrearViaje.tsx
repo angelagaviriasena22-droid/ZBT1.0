@@ -96,23 +96,24 @@ export function CrearViaje() {
   };
 
   const actualizarFecha = (
-    idHabitacion: number,
-    campo: "fechaInicio" | "fechaFin",
-    valor: string
-  ) => {
-    setFechasPorHabitacion((prev) => ({
-      ...prev,
-      [idHabitacion]: {
-        fechaInicio: prev[idHabitacion]?.fechaInicio ?? "",
-        fechaFin: prev[idHabitacion]?.fechaFin ?? "",
+  idHabitacion: number,
+  campo: "fechaInicio" | "fechaFin",
+  valor: string
+) => {
+  setFechasPorHabitacion((prev) => ({
+    ...prev,
+    [idHabitacion]: {
+      ...(prev[idHabitacion] ?? {
+        fechaInicio: "",
+        fechaFin: "",
         enviando: false,
         error: null,
-        ...prev[idHabitacion],
-        [campo]: valor,
-        error: null,
-      },
-    }));
-  };
+      }),
+      [campo]: valor,
+      error: null,
+    },
+  }));
+};
 
   const calcularNoches = (
     fechaInicio: string,
@@ -521,4 +522,4 @@ export function CrearViaje() {
   );
 }
 
-export default CrearViaje;
+  export default CrearViaje;
