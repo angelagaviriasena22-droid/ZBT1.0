@@ -10,7 +10,7 @@ export interface Destino {
   id_depto: number | null;
   nombre: string;
   foto_referencia: string | null;
-  clima: string | null;
+  cima: string | null;
   generalidades: string | null;
   id_contacto: string | null;
   fecha_registro: string | null;
@@ -86,12 +86,6 @@ export interface Actividad {
   foto_referencia: string | null;
 }
 
-<<<<<<< HEAD
-export interface Informativa {
-  descripcion: string | null;
-  contacto: string | null;
-  foto_referencia?: string | null;
-=======
 export interface Feria {
   id_feria: number;
   id_depto: number | null;
@@ -106,5 +100,10 @@ export interface Feria {
   activo: boolean;
   nombre_depto: string | null;
   nombre_destino: string | null;
->>>>>>> 57b6c64a87621c0c2ca88a7da6673f9a8b773b8a
+}
+
+// Agregada para que coincida perfectamente con los componentes informativos
+export interface Informativa {
+  descripcion: string | null;
+  contacto: string | null;
 }

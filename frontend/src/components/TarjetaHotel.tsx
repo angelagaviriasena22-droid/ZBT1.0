@@ -2,57 +2,76 @@ import type { Hotel } from "../types";
 
 interface Props {
   hotel: Hotel;
-  esSeleccionado: boolean;
-  onSeleccionar: (hotel: Hotel) => void;
+  onVerHabitaciones: (idHotel: number) => void;
 }
 
-export function TarjetaHotel({ hotel, esSeleccionado, onSeleccionar }: Props) {
+export function TarjetaHotel({ hotel, onVerHabitaciones }: Props) {
   const lleno = Number(hotel.porcentaje_ocupacion) >= 100;
 
   return (
     <div
-      className={`tarjeta-hotel ${esSeleccionado ? "seleccionada" : ""} ${
-        lleno ? "hotel-bloqueado" : ""
+      className={`tarjeta-hotel-nueva ${
+        lleno ? "hotel-bloqueado-nueva" : ""
       }`}
-      onClick={() => onSeleccionar(hotel)}
     >
+      {/* IMAGEN DEL HOTEL */}
       {hotel.foto_referencia ? (
         <img
+          className="foto-hotel"
           src={hotel.foto_referencia}
           alt={hotel.nombre}
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
-          }}
         />
       ) : (
-        <div className="imagen-sin-foto">Sin imagen disponible</div>
+        <div className="imagen-hotel-sin-foto">
+          Sin imagen disponible
+        </div>
       )}
 
-      <div className="contenido-hotel">
-        <h3>{hotel.nombre}</h3>
-        {hotel.direccion && <p className="direccion">📍 {hotel.direccion}</p>}
-        {hotel.descripcion && (
-          <p className="descripcion-hotel">{hotel.descripcion}</p>
+      <div className="contenido-hotel-nueva">
+        <h2>{hotel.nombre}</h2>
+
+        {hotel.direccion && (
+          <p className="direccion-hotel">
+            📍 {hotel.direccion}
+          </p>
         )}
 
-        <div className="precio-hotel">
-          <span>Precio promedio:</span>
-          <strong>
-            $
-            {hotel.precio_promedio?.toLocaleString("es-CO") ?? "No disponible"}
-          </strong>
-        </div>
+        {hotel.descripcion && (
+          <p className="descripcion-hotel">
+            {hotel.descripcion}
+          </p>
+        )}
 
-        <div className="ocupacion-hotel">
-          <span>Ocupación:</span>
-          <strong>
-            {hotel.porcentaje_ocupacion != null
-              ? `${hotel.porcentaje_ocupacion}%`
-              : "0%"}
-          </strong>
-        </div>
+        {hotel.precio_promedio !== null &&
+          hotel.precio_promedio !== undefined && (
+            <p className="precio-hotel-nueva">
+              Precio promedio:{" "}
+              <strong>
+                ${hotel.precio_promedio.toLocaleString("es-CO")}
+              </strong>
+            </p>
+          )}
 
-        {lleno && <p className="hotel-lleno">Hotel no disponible</p>}
+        {hotel.porcentaje_ocupacion !== null &&
+          hotel.porcentaje_ocupacion !== undefined && (
+            <p className="ocupacion-hotel-nueva">
+              Ocupación:{" "}
+              <strong>{hotel.porcentaje_ocupacion}%</strong>
+            </p>
+          )}
+
+        {lleno ? (
+          <p className="hotel-lleno-nueva">
+            Hotel no disponible
+          </p>
+        ) : (
+          <button
+            className="boton-habitaciones"
+            onClick={() => onVerHabitaciones(hotel.id_hotel)}
+          >
+            Ver habitaciones
+          </button>
+        )}
       </div>
     </div>
   );
