@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
 import { authService } from "../services/authService";
 import type { RegistroDatos, RespuestaAuth, Usuario } from "../types/usuario";
@@ -28,6 +28,16 @@ function leerUsuarioGuardado(): Usuario | null {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [usuario, setUsuario] = useState<Usuario | null>(leerUsuarioGuardado);
   const [modalAbierto, setModalAbierto] = useState(false);
+
+  // Si el servidor dice que la sesión ya no sirve, se cierra y se abre el login
+  useEffect(() => {
+    const alExpirar = () => {
+      setUsuario(null);
+      setModalAbierto(true);
+    };
+    window.addEventListener("sesion-expirada", alExpirar);
+    return () => window.removeEventListener("sesion-expirada", alExpirar);
+  }, []);
 
   function guardarSesion(respuesta: RespuestaAuth) {
     localStorage.setItem("token", respuesta.access_token);
