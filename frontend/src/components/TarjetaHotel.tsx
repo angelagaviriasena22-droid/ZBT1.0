@@ -1,19 +1,22 @@
 import type { Hotel } from "../types/hotel";
 import { moneda } from "../utils/formato";
 import { urlImagen } from "../utils/imagen";
+import Estrellas from "./Estrellas";
 import "./TarjetaHotel.css";
 
 interface Props {
   hotel: Hotel;
   onElegir: (hotel: Hotel) => void;
+  onVerResenas: (hotel: Hotel) => void;
 }
 
-function TarjetaHotel({ hotel, onElegir }: Props) {
+function TarjetaHotel({ hotel, onElegir, onVerResenas }: Props) {
   const ocupacion = Number(hotel.porcentaje_ocupacion);
-  const lleno = ocupacion >= 100;
+  const promedio = Number(hotel.calificacion_promedio);
+  const total = hotel.total_resenas;
 
   return (
-    <article className={`tarjeta-hotel ${lleno ? "tarjeta-hotel-lleno" : ""}`}>
+    <article className="tarjeta-hotel">
       {hotel.foto_referencia ? (
         <img src={urlImagen(hotel.foto_referencia)} alt={hotel.nombre} />
       ) : (
@@ -22,6 +25,21 @@ function TarjetaHotel({ hotel, onElegir }: Props) {
 
       <div className="tarjeta-hotel-cuerpo">
         <h3>{hotel.nombre}</h3>
+
+        <div className="tarjeta-hotel-calif">
+          <Estrellas valor={promedio} />
+          <span>
+            {total > 0
+              ? `${promedio.toFixed(1)} (${total} ${total === 1 ? "reseña" : "reseñas"})`
+              : "Sin reseñas todavía"}
+          </span>
+          {total > 0 && (
+            <button type="button" className="tarjeta-hotel-enlace" onClick={() => onVerResenas(hotel)}>
+              Ver reseñas
+            </button>
+          )}
+        </div>
+
         {hotel.direccion && <p className="tarjeta-hotel-dir">📍 {hotel.direccion}</p>}
         {hotel.descripcion && <p className="tarjeta-hotel-desc">{hotel.descripcion}</p>}
 
@@ -34,8 +52,8 @@ function TarjetaHotel({ hotel, onElegir }: Props) {
           <strong>{ocupacion}%</strong>
         </div>
 
-        <button className="boton" type="button" disabled={lleno} onClick={() => onElegir(hotel)}>
-          {lleno ? "Hotel completo" : "Ver habitaciones"}
+        <button className="boton" type="button" onClick={() => onElegir(hotel)}>
+          Ver habitaciones
         </button>
       </div>
     </article>

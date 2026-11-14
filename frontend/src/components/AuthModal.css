@@ -109,3 +109,18 @@
 .auth-cambio:hover {
     text-decoration: underline;
 }
+
+.auth-etiqueta b {
+    color: var(--rojo);
+}
+
+.auth-obligatorio {
+    color: var(--rojo);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.auth-campo-error input {
+    border-color: var(--rojo);
+    background: #fff5f5;
+}

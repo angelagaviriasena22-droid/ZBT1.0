@@ -1,0 +1,83 @@
+.res-fondo {
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(6, 11, 103, 0.55);
+}
+
+.res-caja {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    padding: 1.8rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.res-caja h2 {
+    color: var(--azul-oscuro);
+}
+
+.res-cerrar {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.res-sub {
+    margin: 0.3rem 0 1.2rem;
+    color: #555;
+    font-size: 0.92rem;
+}
+
+.res-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.res-etiqueta {
+    color: var(--azul-oscuro);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.res-etiqueta b {
+    color: var(--rojo);
+}
+
+.res-obligatorio {
+    color: var(--rojo);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.res-campo textarea {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    resize: vertical;
+}
+
+.res-campo small {
+    align-self: flex-end;
+    color: #888;
+}
+
+.res-enviar {
+    width: 100%;
+    padding: 0.8rem;
+}

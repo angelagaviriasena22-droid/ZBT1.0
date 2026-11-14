@@ -1,0 +1,92 @@
+.rs-fondo {
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 5vh 1rem;
+    overflow-y: auto;
+    background: rgba(6, 11, 103, 0.55);
+}
+
+.rs-caja {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    padding: 1.6rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.rs-caja h2 {
+    margin-right: 2rem;
+    color: var(--azul-oscuro);
+    font-size: 1.25rem;
+}
+
+.rs-cerrar {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.rs-resumen {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 1rem 0;
+    padding: 0.9rem 1rem;
+    background: var(--beige);
+    border-radius: 12px;
+}
+
+.rs-resumen strong {
+    color: var(--azul-oscuro);
+    font-size: 2rem;
+}
+
+.rs-resumen span {
+    margin-left: auto;
+    color: #555;
+    font-size: 0.88rem;
+}
+
+.rs-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.rs-item {
+    padding: 0.9rem 1rem;
+    border: 1px solid #eee;
+    border-radius: 10px;
+}
+
+.rs-cabecera {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+}
+
+.rs-cabecera span {
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.rs-item p {
+    margin-top: 0.4rem;
+    color: #444;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}

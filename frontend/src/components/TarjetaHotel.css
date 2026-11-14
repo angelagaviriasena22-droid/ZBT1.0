@@ -91,3 +91,23 @@
         height: 160px;
     }
 }
+
+.tarjeta-hotel-calif {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    color: #555;
+}
+
+.tarjeta-hotel-enlace {
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--azul-medio);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+}

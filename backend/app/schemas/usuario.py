@@ -2,11 +2,13 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class UsuarioRegistro(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
     nombre: str = Field(min_length=1, max_length=100)
-    apellidos: str | None = Field(default=None, max_length=100)
-    ciudad: str | None = Field(default=None, max_length=100)
-    direccion: str | None = Field(default=None, max_length=200)
-    telefono: str | None = Field(default=None, max_length=30)
+    apellidos: str = Field(min_length=1, max_length=100)
+    ciudad: str = Field(min_length=1, max_length=100)
+    direccion: str = Field(min_length=1, max_length=200)
+    telefono: str = Field(min_length=7, max_length=30)
     correo: EmailStr
     contrasena: str = Field(min_length=8, max_length=72)
 
@@ -14,6 +16,10 @@ class UsuarioRegistro(BaseModel):
 class UsuarioLogin(BaseModel):
     correo: EmailStr
     contrasena: str = Field(max_length=72)
+
+
+class GoogleLogin(BaseModel):
+    credential: str = Field(min_length=10)
 
 
 class UsuarioEditar(BaseModel):

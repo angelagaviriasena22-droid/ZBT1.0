@@ -16,5 +16,6 @@ class Usuario(Base):
     documento = Column(String)
     rol = Column(String, nullable=False, default="usuario")  # usuario | admin_hotel | super_admin
     contrasena = Column(String, nullable=False)
+    google_id = Column(String, unique=True, nullable=True)
     activo = Column(Boolean, nullable=False, default=True)
     fecha_registro = Column(DateTime, server_default=func.now())

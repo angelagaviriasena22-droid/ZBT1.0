@@ -2,11 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import EncabezadoPagina from "../components/EncabezadoPagina";
+import ModalResena from "../components/ModalResena";
 import { useAuth } from "../context/AuthContext";
+import { resenaService } from "../services/resenaService";
 import { viajeService } from "../services/viajeService";
 import type { Viaje } from "../types/viaje";
 import { mensajeError } from "../utils/errores";
 import { fechaCorta, hoy, moneda } from "../utils/formato";
+import { descargarRecibo } from "../utils/recibo";
 import "./MisViajes.css";
 
 type Filtro = "proximos" | "pasados" | "cancelados";
@@ -26,6 +29,8 @@ function clasificar(v: Viaje): Filtro {
 function MisViajes() {
   const { usuario, abrirAuth } = useAuth();
   const [viajes, setViajes] = useState<Viaje[]>([]);
+  const [calificados, setCalificados] = useState<number[]>([]);
+  const [viajeAResenar, setViajeAResenar] = useState<Viaje | null>(null);
   const [filtro, setFiltro] = useState<Filtro>("proximos");
   const [cargando, setCargando] = useState(true);
   const [cancelando, setCancelando] = useState<number | null>(null);
@@ -36,9 +41,11 @@ function MisViajes() {
       setCargando(false);
       return;
     }
-    viajeService
-      .misViajes()
-      .then(setViajes)
+    Promise.all([viajeService.misViajes(), resenaService.mias()])
+      .then(([lista, mias]) => {
+        setViajes(lista);
+        setCalificados(mias);
+      })
       .catch(() => setError("No se pudieron cargar tus viajes."))
       .finally(() => setCargando(false));
   }, [usuario]);
@@ -116,63 +123,97 @@ function MisViajes() {
       )}
 
       <div className="viajes-lista">
-        {visibles.map((v) => (
-          <article key={v.id_vp} className={`viaje viaje-${clasificar(v)}`}>
-            <div className="viaje-cabecera">
-              <div>
-                <h2>{v.nombre_destino}</h2>
-                <p className="viaje-hotel">🏨 {v.nombre_hotel}</p>
+        {visibles.map((v) => {
+          const clase = clasificar(v);
+          const yaCalificado = calificados.includes(v.id_vp);
+          return (
+            <article key={v.id_vp} className={`viaje viaje-${clase}`}>
+              <div className="viaje-cabecera">
+                <div>
+                  <h2>{v.nombre_destino}</h2>
+                  <p className="viaje-hotel">🏨 {v.nombre_hotel}</p>
+                </div>
+                <span className={`viaje-estado estado-${clase}`}>
+                  {clase === "proximos" ? "Próximo" : clase === "pasados" ? "Finalizado" : "Cancelado"}
+                </span>
               </div>
-              <span className={`viaje-estado estado-${clasificar(v)}`}>
-                {clasificar(v) === "proximos" ? "Próximo" : clasificar(v) === "pasados" ? "Finalizado" : "Cancelado"}
-              </span>
-            </div>
 
-            <div className="viaje-datos">
-              <div>
-                <small>Fechas</small>
-                <strong>{fechaCorta(v.fecha_inicial)} – {fechaCorta(v.fecha_final)}</strong>
+              <div className="viaje-datos">
+                <div>
+                  <small>Fechas</small>
+                  <strong>{fechaCorta(v.fecha_inicial)} – {fechaCorta(v.fecha_final)}</strong>
+                </div>
+                <div>
+                  <small>Duración</small>
+                  <strong>{v.noches} {v.noches === 1 ? "noche" : "noches"}</strong>
+                </div>
+                <div>
+                  <small>Personas</small>
+                  <strong>{v.num_personas}</strong>
+                </div>
               </div>
-              <div>
-                <small>Duración</small>
-                <strong>{v.noches} {v.noches === 1 ? "noche" : "noches"}</strong>
-              </div>
-              <div>
-                <small>Personas</small>
-                <strong>{v.num_personas}</strong>
-              </div>
-            </div>
 
-            <ul className="viaje-habitaciones">
-              {v.habitaciones.map((h) => (
-                <li key={h.id_habitacion}>
-                  <span>
-                    🛏️ {h.nombre_habitacion} · {h.personas_asignadas}{" "}
-                    {h.personas_asignadas === 1 ? "persona" : "personas"}
-                  </span>
-                  <span>{moneda(h.precio_noche)}/noche</span>
-                </li>
-              ))}
-            </ul>
+              <ul className="viaje-habitaciones">
+                {v.habitaciones.map((h) => (
+                  <li key={h.id_habitacion}>
+                    <span>
+                      🛏️ {h.nombre_habitacion} · {h.personas_asignadas}{" "}
+                      {h.personas_asignadas === 1 ? "persona" : "personas"}
+                    </span>
+                    <span>{moneda(h.precio_noche)}/noche</span>
+                  </li>
+                ))}
+              </ul>
 
-            <div className="viaje-pie">
-              <div>
-                <small>Total</small>
-                <strong>{moneda(v.precio)}</strong>
+              <div className="viaje-pie">
+                <div>
+                  <small>Total</small>
+                  <strong>{moneda(v.precio)}</strong>
+                </div>
+
+                <div className="viaje-acciones">
+                  {clase !== "cancelados" && (
+                    <button className="viaje-recibo" onClick={() => descargarRecibo(v, usuario)}>
+                      📄 Recibo PDF
+                    </button>
+                  )}
+
+                  {clase === "pasados" && v.estado === "finalizado" && (
+                    yaCalificado ? (
+                      <span className="viaje-calificada">✅ Ya calificaste</span>
+                    ) : (
+                      <button className="viaje-calificar" onClick={() => setViajeAResenar(v)}>
+                        ⭐ Calificar estancia
+                      </button>
+                    )
+                  )}
+
+                  {clase === "proximos" && (
+                    <button
+                      className="viaje-cancelar"
+                      disabled={cancelando === v.id_vp}
+                      onClick={() => cancelar(v.id_vp)}
+                    >
+                      {cancelando === v.id_vp ? "Cancelando..." : "Cancelar reserva"}
+                    </button>
+                  )}
+                </div>
               </div>
-              {clasificar(v) === "proximos" && (
-                <button
-                  className="viaje-cancelar"
-                  disabled={cancelando === v.id_vp}
-                  onClick={() => cancelar(v.id_vp)}
-                >
-                  {cancelando === v.id_vp ? "Cancelando..." : "Cancelar reserva"}
-                </button>
-              )}
-            </div>
-          </article>
-        ))}
+            </article>
+          );
+        })}
       </div>
+
+      {viajeAResenar && (
+        <ModalResena
+          viaje={viajeAResenar}
+          onCerrar={() => setViajeAResenar(null)}
+          onGuardada={(idVp) => {
+            setCalificados((lista) => [...lista, idVp]);
+            setViajeAResenar(null);
+          }}
+        />
+      )}
     </div>
   );
 }

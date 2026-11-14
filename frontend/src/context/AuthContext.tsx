@@ -9,6 +9,7 @@ interface AuthContextValor {
   abrirAuth: () => void;
   cerrarAuth: () => void;
   iniciarSesion: (correo: string, contrasena: string) => Promise<void>;
+  iniciarConGoogle: (credencial: string) => Promise<void>;
   registrarse: (datos: RegistroDatos) => Promise<void>;
   cerrarSesion: () => void;
   actualizarUsuario: (usuario: Usuario) => void;
@@ -49,6 +50,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     guardarSesion(await authService.login(correo, contrasena));
   }
 
+  async function iniciarConGoogle(credencial: string) {
+    guardarSesion(await authService.google(credencial));
+  }
+
   async function registrarse(datos: RegistroDatos) {
     guardarSesion(await authService.registro(datos));
   }
@@ -72,6 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         abrirAuth: () => setModalAbierto(true),
         cerrarAuth: () => setModalAbierto(false),
         iniciarSesion,
+        iniciarConGoogle,
         registrarse,
         cerrarSesion,
         actualizarUsuario,

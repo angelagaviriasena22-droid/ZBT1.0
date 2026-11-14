@@ -10,3 +10,4 @@ from app.models.hotel import Hotel, HotelVista
 from app.models.habitacion import Habitacion, HabitacionVista
 from app.models.viaje_personalizado import ViajePersonalizado
 from app.models.viaje_habitacion import ViajeHabitacion
+from app.models.resena import Resena

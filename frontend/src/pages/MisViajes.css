@@ -190,3 +190,44 @@
         grid-template-columns: 1fr;
     }
 }
+
+.viaje-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.6rem;
+}
+
+.viaje-recibo,
+.viaje-calificar {
+    padding: 0.45rem 1.1rem;
+    background: white;
+    border: 1px solid var(--azul-medio);
+    border-radius: 6px;
+    color: var(--azul-medio);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.viaje-recibo:hover,
+.viaje-calificar:hover {
+    background: var(--azul-medio);
+    color: white;
+}
+
+.viaje-calificar {
+    border-color: #f5a623;
+    color: #b87400;
+}
+
+.viaje-calificar:hover {
+    background: #f5a623;
+    color: white;
+}
+
+.viaje-calificada {
+    color: var(--verde);
+    font-size: 0.88rem;
+    font-weight: 600;
+}

@@ -4,9 +4,10 @@ from sqlalchemy.orm import Session
 from app.database.connection import get_db
 from app.models import Usuario
 from app.schemas.usuario import (
-    EliminarCuenta, TokenOut, UsuarioEditar, UsuarioLogin, UsuarioOut, UsuarioRegistro,
+    EliminarCuenta, GoogleLogin, TokenOut, UsuarioEditar, UsuarioLogin, UsuarioOut,
+    UsuarioRegistro,
 )
-from app.services.usuario_service import autenticar, registrar_usuario
+from app.services.usuario_service import autenticar, ingresar_con_google, registrar_usuario
 from app.utils.deps import usuario_actual
 from app.utils.security import crear_token, verify_password
 
@@ -25,6 +26,12 @@ def registro(datos: UsuarioRegistro, db: Session = Depends(get_db)):
 @router.post("/login", response_model=TokenOut)
 def login(datos: UsuarioLogin, db: Session = Depends(get_db)):
     usuario = autenticar(db, datos.correo, datos.contrasena)
+    return TokenOut(access_token=crear_token(usuario.id_usuario, usuario.rol), usuario=usuario)
+
+
+@router.post("/google", response_model=TokenOut)
+def login_google(datos: GoogleLogin, db: Session = Depends(get_db)):
+    usuario = ingresar_con_google(db, datos.credential)
     return TokenOut(access_token=crear_token(usuario.id_usuario, usuario.rol), usuario=usuario)
 
 

@@ -24,7 +24,7 @@ class Hotel(Base):
 
 
 class HotelVista(Base):
-    """Vista v_hotel (para mostrar): precio promedio y ocupación calculados."""
+    """Vista v_hotel (para mostrar): precio promedio, ocupación y calificación calculados."""
     __tablename__ = "v_hotel"
 
     id_hotel = Column(Integer, primary_key=True)
@@ -39,3 +39,5 @@ class HotelVista(Base):
     habitaciones_ocupadas = Column(Integer)
     precio_promedio = Column(Numeric)
     porcentaje_ocupacion = Column(Numeric)
+    calificacion_promedio = Column(Numeric)
+    total_resenas = Column(Integer)

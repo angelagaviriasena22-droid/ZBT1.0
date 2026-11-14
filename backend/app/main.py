@@ -16,6 +16,7 @@ from app.routers import (
     habitaciones,
     hoteles,
     panel_hotel,
+    resenas,
     solicitudes,
     transporte,
     usuarios,
@@ -44,6 +45,7 @@ app.include_router(transporte.router)
 app.include_router(ferias.router)
 app.include_router(buscar.router)
 app.include_router(solicitudes.router)
+app.include_router(resenas.router)
 
 # Usuarios y reservas
 app.include_router(usuarios.router)

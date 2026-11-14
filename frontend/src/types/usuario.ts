@@ -11,10 +11,10 @@ export interface Usuario {
 
 export interface RegistroDatos {
   nombre: string;
-  apellidos?: string;
-  ciudad?: string;
-  direccion?: string;
-  telefono?: string;
+  apellidos: string;
+  ciudad: string;
+  direccion: string;
+  telefono: string;
   correo: string;
   contrasena: string;
 }

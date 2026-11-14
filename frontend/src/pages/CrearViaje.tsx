@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import ModalHabitaciones from "../components/ModalHabitaciones";
+import ModalResenas from "../components/ModalResenas";
 import TarjetaHotel from "../components/TarjetaHotel";
 import TarjetaInfo from "../components/TarjetaInfo";
 import { actividadService } from "../services/actividadService";
@@ -21,6 +22,7 @@ function CrearViaje() {
   const [actividades, setActividades] = useState<Informacion[]>([]);
   const [hoteles, setHoteles] = useState<Hotel[]>([]);
   const [hotelElegido, setHotelElegido] = useState<Hotel | null>(null);
+  const [hotelResenas, setHotelResenas] = useState<Hotel | null>(null);
   const [error, setError] = useState("");
 
   function cargarHoteles() {
@@ -67,7 +69,12 @@ function CrearViaje() {
         {hoteles.length === 0 && <p>Aún no hay hoteles registrados en este destino.</p>}
         <div className="crear-viaje-hoteles">
           {hoteles.map((h) => (
-            <TarjetaHotel key={h.id_hotel} hotel={h} onElegir={setHotelElegido} />
+            <TarjetaHotel
+              key={h.id_hotel}
+              hotel={h}
+              onElegir={setHotelElegido}
+              onVerResenas={setHotelResenas}
+            />
           ))}
         </div>
       </section>
@@ -83,6 +90,8 @@ function CrearViaje() {
           }}
         />
       )}
+
+      {hotelResenas && <ModalResenas hotel={hotelResenas} onCerrar={() => setHotelResenas(null)} />}
     </div>
   );
 }

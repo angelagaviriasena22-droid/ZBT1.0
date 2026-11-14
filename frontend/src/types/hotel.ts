@@ -11,4 +11,6 @@ export interface Hotel {
   habitaciones_ocupadas: number;
   precio_promedio: number | string;
   porcentaje_ocupacion: number | string;
+  calificacion_promedio: number | string;
+  total_resenas: number;
 }

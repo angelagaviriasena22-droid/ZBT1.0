@@ -6,4 +6,6 @@ export const authService = {
     api.post<RespuestaAuth>("/usuarios/login", { correo, contrasena }).then((r) => r.data),
   registro: (datos: RegistroDatos) =>
     api.post<RespuestaAuth>("/usuarios/registro", datos).then((r) => r.data),
+  google: (credential: string) =>
+    api.post<RespuestaAuth>("/usuarios/google", { credential }).then((r) => r.data),
 };

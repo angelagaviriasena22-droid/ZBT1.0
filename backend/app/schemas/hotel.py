@@ -19,3 +19,5 @@ class HotelOut(BaseModel):
     habitaciones_ocupadas: int
     precio_promedio: Decimal
     porcentaje_ocupacion: Decimal
+    calificacion_promedio: Decimal = Decimal(0)
+    total_resenas: int = 0
