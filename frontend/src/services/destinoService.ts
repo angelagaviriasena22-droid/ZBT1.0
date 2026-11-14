@@ -1,16 +1,8 @@
-import api from "./index";
-import type { Destino, Gastronomia, Transporte, Actividad } from "../types";
+import api from "./api";
+import type { Destino } from "../types/destino";
 
-export const destinosService = {
-  getDestinoPorId: (idDestino: string) => 
-    api.get<Destino>(`/destinos/${idDestino}`),
-
-  getGastronomiaPorDestino: (idDestino: string) => 
-    api.get<Gastronomia[]>(`/gastronomia/?id_destino=${idDestino}`),
-
-  getTransportePorDestino: (idDestino: string) => 
-    api.get<Transporte[]>(`/transporte/?id_destino=${idDestino}`),
-
-  getActividadesPorDestino: (idDestino: string) => 
-    api.get<Actividad[]>(`/actividades/?id_destino=${idDestino}`),
+export const destinoService = {
+  listar: (idDepto?: string) =>
+    api.get<Destino[]>("/destinos/", { params: { id_depto: idDepto } }).then((r) => r.data),
+  obtener: (id: string) => api.get<Destino>(`/destinos/${id}`).then((r) => r.data),
 };

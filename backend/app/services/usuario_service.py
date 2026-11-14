@@ -2,142 +2,37 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.models.usuario import Usuario
-
-from app.schemas.usuario import (
-    UsuarioCreate,
-    UsuarioLogin
-)
-
-from app.utils.security import (
-    hash_password,
-    verify_password
-)
+from app.schemas.usuario import UsuarioRegistro
+from app.utils.ids import generar_id_usuario
+from app.utils.security import hash_password, verify_password
 
 
-# REGISTRAR USUARIO
-def registrar_usuario(
-    db: Session,
-    usuario: UsuarioCreate
-):
-    # Verificar si el ID ya existe
-    if db.query(Usuario).filter(
-        Usuario.id_usuario == usuario.id_usuario
-    ).first():
+def registrar_usuario(db: Session, datos: UsuarioRegistro) -> Usuario:
+    correo = datos.correo.lower()
+    if db.query(Usuario).filter(Usuario.correo == correo).first():
+        raise HTTPException(409, "Ya existe una cuenta con ese correo")
 
-        raise HTTPException(
-            status_code=400,
-            detail="El id_usuario ya está registrado"
-        )
-
-    # Verificar si el correo ya existe
-    if db.query(Usuario).filter(
-        Usuario.correo == usuario.correo
-    ).first():
-
-        raise HTTPException(
-            status_code=400,
-            detail="El correo electrónico ya está registrado"
-        )
-
-    # Convertir los datos a diccionario
-    usuario_dict = usuario.model_dump()
-
-    # Encriptar contraseña
-    usuario_dict["contrasena"] = hash_password(
-        usuario.contrasena
+    usuario = Usuario(
+        id_usuario=generar_id_usuario(),
+        nombre=datos.nombre,
+        apellidos=datos.apellidos,
+        ciudad=datos.ciudad,
+        direccion=datos.direccion,
+        telefono=datos.telefono,
+        correo=correo,
+        rol="usuario",
+        contrasena=hash_password(datos.contrasena),
+        activo=True,
     )
-
-    # Crear usuario
-    nuevo_usuario = Usuario(
-        **usuario_dict
-    )
-
-    # Guardar en la base de datos
-    db.add(nuevo_usuario)
+    db.add(usuario)
     db.commit()
-    db.refresh(nuevo_usuario)
-
-    return nuevo_usuario
-
-
-# LOGIN DE USUARIO
-def login_usuario(
-    db: Session,
-    credenciales: UsuarioLogin
-):
-    print("================================")
-    print("LOGIN")
-    print("Correo recibido:", credenciales.correo)
-    print("================================")
-
-    try:
-        usuario = (
-            db.query(Usuario)
-            .filter(
-                Usuario.correo == credenciales.correo
-            )
-            .first()
-        )
-
-        print("Usuario encontrado:", usuario)
-
-    except Exception as e:
-        print("================================")
-        print("ERROR REAL DE BASE DE DATOS:")
-        print(repr(e))
-        print("================================")
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error consultando usuario: {str(e)}"
-        )
-
-    if not usuario:
-        raise HTTPException(
-            status_code=401,
-            detail="Correo o contraseña incorrectos"
-        )
-
-    if not verify_password(
-        credenciales.contrasena,
-        usuario.contrasena
-    ):
-        raise HTTPException(
-            status_code=401,
-            detail="Correo o contraseña incorrectos"
-        )
-
-    return {
-        "mensaje": "Inicio de sesión exitoso",
-        "usuario": {
-            "id_usuario": usuario.id_usuario,
-            "nombre": usuario.nombre,
-            "apellidos": usuario.apellidos,
-            "correo": usuario.correo,
-            "rol": usuario.rol
-        }
-    }
+    db.refresh(usuario)
+    return usuario
 
 
-# OBTENER USUARIO POR ID
-def obtener_usuario(
-    db: Session,
-    id_usuario: str
-):
-    # Buscar usuario
-    usuario = (
-        db.query(Usuario)
-        .filter(
-            Usuario.id_usuario == id_usuario
-        )
-        .first()
-    )
-
-    # Si no existe
-    if not usuario:
-        raise HTTPException(
-            status_code=404,
-            detail="Usuario no encontrado"
-        )
-
+def autenticar(db: Session, correo: str, contrasena: str) -> Usuario:
+    usuario = db.query(Usuario).filter(Usuario.correo == correo.lower()).first()
+    # Mismo mensaje en todos los casos para no revelar si el correo existe
+    if not usuario or not usuario.activo or not verify_password(contrasena, usuario.contrasena):
+        raise HTTPException(401, "Correo o contraseña incorrectos")
     return usuario

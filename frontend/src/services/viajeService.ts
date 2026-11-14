@@ -1,27 +1,10 @@
-import api from "./index";
-import type { Hotel, Habitacion, Informativa } from "../types";
+import api from "./api";
+import type { CrearViajeDatos, Sugerencia, Viaje } from "../types/viaje";
 
-export const viajesService = {
-  getGastronomia: (idDestino: string) => 
-    api.get<Informativa[]>(`/gastronomia/?id_destino=${idDestino}`),
-
-  getTransporte: (idDestino: string) => 
-    api.get<Informativa[]>(`/transporte/?id_destino=${idDestino}`),
-
-  getActividades: (idDestino: string) => 
-    api.get<Informativa[]>(`/actividades/?id_destino=${idDestino}`),
-
-  getHoteles: (idDestino: string) => 
-    api.get<Hotel[]>(`/hoteles/?id_destino=${idDestino}`),
-
-  getHabitaciones: (idHotel: number) => 
-    api.get<Habitacion[]>(`/habitaciones/?id_hotel=${idHotel}`),
-
-  crearReserva: (datos: {
-    id_usuario: number;
-    id_destino: number;
-    id_habitacion: number;
-    fecha_inicial: string;
-    fecha_final: string;
-  }) => api.post("/viajes/", datos),
+export const viajeService = {
+  crear: (datos: CrearViajeDatos) => api.post<Viaje>("/viajes/", datos).then((r) => r.data),
+  misViajes: () => api.get<Viaje[]>("/viajes/mis-viajes").then((r) => r.data),
+  cancelar: (id: number) => api.put<Viaje>(`/viajes/${id}/cancelar`).then((r) => r.data),
+  sugerir: (datos: Omit<CrearViajeDatos, "habitaciones">) =>
+    api.post<Sugerencia>("/viajes/sugerir", datos).then((r) => r.data),
 };

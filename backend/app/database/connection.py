@@ -1,21 +1,44 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
-from dotenv import load_dotenv
-import os
 
-load_dotenv()
-
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_NAME = os.getenv("DB_NAME")
-DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT")
+from app.core.config import settings
 
 
+def _con_driver(url: str) -> str:
+    """Fuerza psycopg2, el driver que instalamos."""
+    if url.startswith("postgresql://"):
+        return url.replace("postgresql://", "postgresql+psycopg2://", 1)
+    return url
 
-DATABASE_URL = f"postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-engine = create_engine(DATABASE_URL)
+def _motivo(e: Exception) -> str:
+    # Postgres en Windows a veces responde en español (cp1252) y psycopg2 no puede leerlo
+    if isinstance(e, UnicodeDecodeError):
+        return e.object.decode("cp1252", errors="replace")
+    return str(e).splitlines()[0] if str(e) else type(e).__name__
+
+
+def _crear_engine():
+    urls = [u for u in (settings.DATABASE_URL, settings.DATABASE_URL_RESPALDO) if u]
+    for url in urls:
+        local = "localhost" in url or "127.0.0.1" in url
+        nombre = "Postgres local" if local else "Neon (nube)"
+        try:
+            motor = create_engine(
+                _con_driver(url),
+                pool_pre_ping=True,
+                connect_args={"connect_timeout": 6},
+            )
+            with motor.connect() as conexion:
+                conexion.execute(text("SELECT 1"))
+            print(f"[BD] Conectado a: {nombre}")
+            return motor
+        except Exception as e:
+            print(f"[BD] Falló {nombre}: {_motivo(e)}")
+    raise RuntimeError("No hay ninguna base disponible. Revisa DATABASE_URL en backend/.env")
+
+
+engine = _crear_engine()
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

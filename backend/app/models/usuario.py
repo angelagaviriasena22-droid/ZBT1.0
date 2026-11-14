@@ -13,9 +13,8 @@ class Usuario(Base):
     direccion = Column(String)
     correo = Column(String, unique=True, nullable=False)
     telefono = Column(String)
-    rol = Column(String, default="cliente")  # "cliente", "admin", "super_admin"
+    documento = Column(String)
+    rol = Column(String, nullable=False, default="usuario")  # usuario | admin_hotel | super_admin
     contrasena = Column(String, nullable=False)
+    activo = Column(Boolean, nullable=False, default=True)
     fecha_registro = Column(DateTime, server_default=func.now())
-    
-    # NUEVO CAMPO: Para saber si el administrador fue aprobado por el Super Administrador
-    aprobado = Column(Boolean, default=False)

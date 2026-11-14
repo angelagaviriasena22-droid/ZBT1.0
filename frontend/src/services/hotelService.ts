@@ -1,7 +1,7 @@
-import api from "./index";
-import type { Hotel } from "../types";
+import api from "./api";
+import type { Hotel } from "../types/hotel";
 
-export const hotelesService = {
-  getHotelesPorDestino: (idDestino: string) => 
-    api.get<Hotel[]>(`/hoteles/?id_destino=${idDestino}`),
+export const hotelService = {
+  listar: (idDestino: string) =>
+    api.get<Hotel[]>("/hoteles/", { params: { id_destino: idDestino } }).then((r) => r.data),
 };

@@ -1,8 +1,23 @@
-import api from "./index";
+import api from "./api";
+
+export interface SolicitudDatos {
+  nombre: string;
+  apellidos: string;
+  documento: string;
+  cargo: string;
+  correo: string;
+  telefono: string;
+  contrasena: string;
+  nombre_hotel: string;
+  direccion_hotel: string;
+  contacto_hotel: string;
+  categoria: string;
+  descripcion: string;
+  politicas: string;
+  id_destino: number | null;
+}
 
 export const solicitudService = {
-  enviarSolicitudAcceso: async (formData: object) => {
-    const respuesta = await api.post("/solicitar-acceso", formData);
-    return respuesta.data;
-  },
+  enviar: (datos: SolicitudDatos) =>
+    api.post<{ mensaje: string }>("/solicitudes/", datos).then((r) => r.data),
 };

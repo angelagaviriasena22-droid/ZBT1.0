@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { obtenerDetallesDepartamento } from "../services/destinosService";
-import type { Depto, Destino } from "../types";
+
 import DestinoCard from "../components/DestinoCard";
-import "../styles/DestinosPorDepto.css"; // Importamos los estilos desde la misma carpeta
+import { deptoService } from "../services/deptoService";
+import { destinoService } from "../services/destinoService";
+import type { Depto } from "../types/depto";
+import type { Destino } from "../types/destino";
+import { urlImagen } from "../utils/imagen";
+import "./DestinosPorDepto.css";
 
 function DestinosPorDepto() {
   const { idDepto } = useParams<{ idDepto: string }>();
@@ -14,45 +18,40 @@ function DestinosPorDepto() {
 
   useEffect(() => {
     if (!idDepto) return;
-    
     setCargando(true);
-    obtenerDetallesDepartamento(idDepto)
-      .then(({ depto, destinos }) => {
-        setDepto(depto);
-        setDestinos(destinos);
+    Promise.all([deptoService.obtener(idDepto), destinoService.listar(idDepto)])
+      .then(([d, lista]) => {
+        setDepto(d);
+        setDestinos(lista);
       })
-      .catch(() => setError("No se pudo cargar la información del departamento"))
+      .catch(() => setError("No se pudo cargar el departamento."))
       .finally(() => setCargando(false));
   }, [idDepto]);
 
   if (cargando) return <p className="mensaje-carga">Cargando...</p>;
-  if (error) return <p className="error">{error}</p>;
+  if (error || !depto) return <p className="mensaje-error">{error || "Departamento no encontrado"}</p>;
 
   return (
-    <div>
+    <>
       <div
-        className="rectangulo-imagen"
-        style={{
-          backgroundImage: depto?.foto_referencia ? `url(${depto.foto_referencia})` : undefined,
-        }}
+        className="depto-banner"
+        style={{ backgroundImage: `url("${urlImagen(depto.foto_referencia)}")` }}
       >
-        <h1>{depto?.nombre}</h1>
+        <h1>{depto.nombre}</h1>
       </div>
 
-      {depto?.descripcion && <p className="descripcion-depto">{depto.descripcion}</p>}
+      {depto.descripcion && <p className="depto-descripcion">{depto.descripcion}</p>}
 
-      <section className="contenedor-destinos">
-        <h2>Destinos en {depto?.nombre}</h2>
-
+      <section className="depto-destinos">
+        <h2>Destinos en {depto.nombre}</h2>
         {destinos.length === 0 && <p>Aún no hay destinos registrados en este departamento.</p>}
-
-        <div className="lista-destinos">
-          {destinos.map((destino) => (
-            <DestinoCard key={destino.id_destino} destino={destino} />
+        <div className="depto-destinos-lista">
+          {destinos.map((d) => (
+            <DestinoCard key={d.id_destino} destino={d} />
           ))}
         </div>
       </section>
-    </div>
+    </>
   );
 }
 

@@ -1,20 +1,21 @@
-from pydantic import BaseModel
 from decimal import Decimal
-from datetime import datetime
 from typing import Optional
+
+from pydantic import BaseModel, ConfigDict
 
 
 class HotelOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id_hotel: int
     id_destino: int
     nombre: str
-    foto_referencia: Optional[str]
-    direccion: Optional[str]
-    descripcion: Optional[str]
-    id_contacto: Optional[str]
-    precio_promedio: Optional[Decimal]
-    porcentaje_ocupacion: Optional[Decimal]
-    fecha_registro: Optional[datetime]
-
-    class Config:
-        from_attributes = True
+    foto_referencia: Optional[str] = None
+    direccion: Optional[str] = None
+    descripcion: Optional[str] = None
+    contacto: Optional[str] = None
+    categoria: Optional[str] = None
+    total_habitaciones: int
+    habitaciones_ocupadas: int
+    precio_promedio: Decimal
+    porcentaje_ocupacion: Decimal

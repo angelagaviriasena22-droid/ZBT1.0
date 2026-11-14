@@ -1,14 +1,11 @@
+from datetime import date
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database.connection import get_db
-from app.schemas.habitación import HabitacionOut
-
-from app.services.habitacion_service import (
-    listar_habitaciones,
-    obtener_habitacion
-)
-
+from app.schemas.habitacion import HabitacionOut
+from app.services.habitacion_service import listar_habitaciones, obtener_habitacion
 
 router = APIRouter(
     prefix="/habitaciones",
@@ -19,14 +16,12 @@ router = APIRouter(
 @router.get("/", response_model=list[HabitacionOut])
 def obtener_habitaciones(
     id_hotel: int | None = None,
-    solo_disponibles: bool = False,
+    fecha_inicial: date | None = None,
+    fecha_final: date | None = None,
     db: Session = Depends(get_db)
 ):
-    return listar_habitaciones(
-        db,
-        id_hotel,
-        solo_disponibles
-    )
+    """Si se envían fechas, 'disponible' indica si la habitación está libre en ese rango."""
+    return listar_habitaciones(db, id_hotel, fecha_inicial, fecha_final)
 
 
 @router.get("/{id_habitacion}", response_model=HabitacionOut)

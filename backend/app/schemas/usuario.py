@@ -1,28 +1,47 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional
-from datetime import datetime
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-class UsuarioCreate(BaseModel):
-    id_usuario: str
-    nombre: str
-    apellidos: str
-    ciudad: Optional[str] = None
-    direccion: Optional[str] = None
+
+class UsuarioRegistro(BaseModel):
+    nombre: str = Field(min_length=1, max_length=100)
+    apellidos: str | None = Field(default=None, max_length=100)
+    ciudad: str | None = Field(default=None, max_length=100)
+    direccion: str | None = Field(default=None, max_length=200)
+    telefono: str | None = Field(default=None, max_length=30)
     correo: EmailStr
-    telefono: Optional[str] = None
-    contrasena: str
-    rol: Optional[str] = "usuario"
+    contrasena: str = Field(min_length=8, max_length=72)
+
 
 class UsuarioLogin(BaseModel):
     correo: EmailStr
-    contrasena: str
+    contrasena: str = Field(max_length=72)
+
+
+class UsuarioEditar(BaseModel):
+    nombre: str | None = Field(default=None, min_length=1, max_length=100)
+    apellidos: str | None = Field(default=None, max_length=100)
+    ciudad: str | None = Field(default=None, max_length=100)
+    direccion: str | None = Field(default=None, max_length=200)
+    telefono: str | None = Field(default=None, max_length=30)
+
+
+class EliminarCuenta(BaseModel):
+    contrasena: str = Field(max_length=72)
+
 
 class UsuarioOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id_usuario: str
     nombre: str
-    apellidos: str
-    correo: EmailStr
+    apellidos: str | None = None
+    ciudad: str | None = None
+    direccion: str | None = None
+    correo: str
+    telefono: str | None = None
     rol: str
 
-    class Config:
-        from_attributes = True
+
+class TokenOut(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    usuario: UsuarioOut

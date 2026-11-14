@@ -1,45 +1,43 @@
+from datetime import datetime, timedelta, timezone
+
 import bcrypt
+import jwt
+
+from app.core.config import settings
+
+ALGORITMO = "HS256"
 
 
 # ==========================================
-# ENCRIPTAR CONTRASEÑA
+# CONTRASEÑAS
 # ==========================================
 
 def hash_password(password: str) -> str:
-
-    # Convertir contraseña a bytes
     pwd_bytes = password.encode("utf-8")
-
-    # Generar salt
     salt = bcrypt.gensalt()
+    return bcrypt.hashpw(pwd_bytes, salt).decode("utf-8")
 
-    # Encriptar contraseña
-    hashed_password = bcrypt.hashpw(
-        pwd_bytes,
-        salt
-    )
 
-    # Convertir nuevamente a texto
-    return hashed_password.decode("utf-8")
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    try:
+        return bcrypt.checkpw(
+            plain_password.encode("utf-8"),
+            hashed_password.encode("utf-8"),
+        )
+    except ValueError:
+        # hash inválido (cuentas de prueba con contraseña falsa)
+        return False
 
 
 # ==========================================
-# VERIFICAR CONTRASEÑA
+# TOKEN DE SESIÓN (JWT)
 # ==========================================
 
-def verify_password(
-    plain_password: str,
-    hashed_password: str
-) -> bool:
+def crear_token(id_usuario: str, rol: str) -> str:
+    vence = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    datos = {"sub": id_usuario, "rol": rol, "exp": vence}
+    return jwt.encode(datos, settings.SECRET_KEY, algorithm=ALGORITMO)
 
-    # Convertir contraseña ingresada a bytes
-    pwd_bytes = plain_password.encode("utf-8")
 
-    # Convertir contraseña almacenada a bytes
-    hash_bytes = hashed_password.encode("utf-8")
-
-    # Comparar contraseña
-    return bcrypt.checkpw(
-        pwd_bytes,
-        hash_bytes
-    )
+def decodificar_token(token: str) -> dict:
+    return jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITMO])

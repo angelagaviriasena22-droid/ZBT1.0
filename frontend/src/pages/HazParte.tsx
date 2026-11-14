@@ -1,58 +1,52 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import "../styles/HazParte.css";
+import { useNavigate } from "react-router-dom";
 
-const HazParte: React.FC = () => {
+import "./HazParte.css";
+
+function HazParte() {
   const navigate = useNavigate();
 
   return (
-    <div className="haz-parte-container">
-      {/* Encabezado Principal */}
-      <div className="haz-parte-header">
-        <h1 className="haz-parte-titulo">
-          Haz Parte de Zafiro Bloom Tours 🌿
-        </h1>
-        <p className="haz-parte-descripcion">
-          Nuestra plataforma nace con un propósito claro: impulsar la economía local y dar visibilidad a los mágicos pueblos de nuestra región. Conectamos a viajeros apasionados con la auténtica cultura, hotelería y tradiciones locales.
+    <div className="haz-parte">
+      <header className="haz-parte-encabezado">
+        <h1>Haz parte de Zafiro Bloom Tours 🌿</h1>
+        <p>
+          Nuestra plataforma nace con un propósito claro: impulsar la economía local y dar
+          visibilidad a los pueblos mágicos de nuestra región. Conectamos a viajeros apasionados con
+          la auténtica cultura, hotelería y tradiciones locales.
         </p>
-      </div>
+      </header>
 
-      {/* Sección de Roles y Funcionamiento */}
-      <div className="haz-parte-roles-grid">
-        
-        {/* Tarjeta Administrador */}
-        <div className="haz-parte-card">
-          <h3 className="haz-parte-card-admin">🏨 Administrador (Dueño de Hotel)</h3>
-          <p className="haz-parte-card-texto">
-            ¿Tienes un hotel o alojamiento en un pueblo? Únete para gestionar tu propio hospedaje, agregar tus habitaciones, actualizar tarifas y registrar nuevos destinos si aún no figuran en el sistema.
+      <section className="haz-parte-roles">
+        <article className="haz-parte-rol">
+          <h3 className="rol-admin">🏨 Administrador (dueño de hotel)</h3>
+          <p>
+            ¿Tienes un hotel o alojamiento en un pueblo? Únete para gestionar tu propio hospedaje,
+            agregar tus habitaciones, actualizar tarifas y registrar nuevos destinos si aún no
+            figuran en el sistema.
           </p>
-        </div>
-
-        {/* Tarjeta Super Administrador */}
-        <div className="haz-parte-card">
-          <h3 className="haz-parte-card-super">⚡ Super Administrador</h3>
-          <p className="haz-parte-card-texto">
-            Encargado de validar y aprobar las solicitudes de los nuevos administradores, asegurando la calidad y autenticidad de la oferta turística en cada municipio.
+        </article>
+        <article className="haz-parte-rol">
+          <h3 className="rol-super">⚡ Super administrador</h3>
+          <p>
+            Encargado de validar y aprobar las solicitudes de los nuevos administradores,
+            asegurando la calidad y autenticidad de la oferta turística en cada municipio.
           </p>
-        </div>
+        </article>
+      </section>
 
-      </div>
-
-      {/* Sección de Llamado a la Acción / Cómo unirse */}
-      <div className="haz-parte-cta-box">
-        <h2 className="haz-parte-cta-titulo">¿Eres dueño de un hotel o quieres registrar un destino?</h2>
-        <p className="haz-parte-cta-texto">
-          Envía tu solicitud de registro. Nuestro equipo de Super Administración evaluará tu petición para otorgarte el rol de <strong>Administrador</strong> y habilitar tu panel de control personalizado.
+      <section className="haz-parte-cta">
+        <h2>¿Eres dueño de un hotel o quieres registrar un destino?</h2>
+        <p>
+          Envía tu solicitud de registro. Nuestro equipo de Super Administración evaluará tu
+          petición para otorgarte el rol de <strong>Administrador</strong> y habilitar tu panel de
+          control personalizado.
         </p>
-        <button
-          onClick={() => navigate('/solicitar-acceso')}
-          className="haz-parte-boton"
-        >
-          Solicitar Acceso como Administrador
+        <button className="boton" onClick={() => navigate("/solicitar-acceso")}>
+          Solicitar acceso como administrador
         </button>
-      </div>
+      </section>
     </div>
   );
-};
+}
 
 export default HazParte;

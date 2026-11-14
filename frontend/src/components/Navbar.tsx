@@ -1,107 +1,141 @@
-import { useState } from "react";
+
+import { useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+
 import logo from "../assets/logo.png";
-import ModalFerias, { type ModoModalFerias } from "./ModalFerias";
+import { useAuth } from "../context/AuthContext";
+import ModalFerias, { type ModoModal } from "./ModalFerias";
+import "./Navbar.css";
 
 function Navbar() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const enInicio = location.pathname === "/";
+  const { pathname } = useLocation();
+  const { usuario, abrirAuth, cerrarSesion } = useAuth();
+  const enInicio = pathname === "/";
 
   const [busqueda, setBusqueda] = useState("");
-  const [modalAbierto, setModalAbierto] = useState<ModoModalFerias | null>(null);
   const [terminoActivo, setTerminoActivo] = useState("");
+  const [modal, setModal] = useState<ModoModal | null>(null);
 
-  function manejarBusqueda(e: React.FormEvent) {
+  function buscar(e: FormEvent) {
     e.preventDefault();
     if (!busqueda.trim()) return;
     setTerminoActivo(busqueda.trim());
-    setModalAbierto("busqueda");
+    setModal("busqueda");
   }
 
   return (
     <>
-      <nav className="navbar">
-        <Link to="/" className="navbar-marca">
-          <img src={logo} alt="Zafiro Bloom Tours" className="navbar-logo" />
-          <span className="navbar-titulo">Zafiro Bloom Tours</span>
-        </Link>
+      <header className="cabecera">
+        <nav className="navbar">
+          <Link to="/" className="navbar-marca">
+            <img src={logo} alt="Zafiro Bloom Tours" className="navbar-logo" />
+            <span className="navbar-titulo">Zafiro Bloom Tours</span>
+          </Link>
+
+          {enInicio && (
+            <div className="navbar-botones">
+              <button
+                className="navbar-boton navbar-boton-ferias"
+                onClick={() => setModal("feria")}
+              >
+                📅 Ferias y Fiestas del Mes
+              </button>
+
+              <button
+                className="navbar-boton navbar-boton-ofertas"
+                onClick={() => setModal("oferta")}
+              >
+                ⚡ Ofertas Relámpago
+              </button>
+
+              <button
+                className="navbar-boton navbar-boton-parte"
+                onClick={() => navigate("/haz-parte")}
+              >
+                🌿 Haz parte de Zafiro Bloom Tours
+              </button>
+            </div>
+          )}
+
+          <div className="navbar-sesion">
+            {usuario ? (
+              <>
+                <span className="navbar-saludo">
+                  Hola, {usuario.nombre}
+                </span>
+
+                {usuario.rol === "usuario" && (
+                  <Link to="/mis-viajes" className="navbar-enlace">
+                    Mis viajes
+                  </Link>
+                )}
+
+                {usuario.rol === "admin_hotel" && (
+                  <Link to="/panel/hotel" className="navbar-enlace">
+                    Mi hotel
+                  </Link>
+                )}
+
+                {usuario.rol === "super_admin" && (
+                  <>
+                    <Link to="/panel/solicitudes" className="navbar-enlace">
+                      Solicitudes
+                    </Link>
+
+                    <Link to="/panel/ferias" className="navbar-enlace">
+                      Ferias
+                    </Link>
+                  </>
+                )}
+
+                <Link to="/cuenta" className="navbar-enlace">
+                  Mi cuenta
+                </Link>
+
+                <button
+                  className="navbar-enlace"
+                  onClick={() => {
+                    cerrarSesion();
+                    navigate("/");
+                  }}
+                >
+                  Cerrar sesión
+                </button>
+              </>
+            ) : (
+              <button className="navbar-enlace" onClick={abrirAuth}>
+                Iniciar Sesión / Registrarse
+              </button>
+            )}
+          </div>
+        </nav>
 
         {enInicio && (
-          <div className="navbar-botones">
-            <Link to="/" className="navbar-boton navbar-boton-inicio">
-              🏠 Inicio
-            </Link>
-            <button
-              type="button"
-              className="navbar-boton navbar-boton-ferias"
-              onClick={() => setModalAbierto("feria")}
-            >
-              📅 Ferias y Fiestas del Mes
-            </button>
-            <button
-              type="button"
-              className="navbar-boton navbar-boton-ofertas"
-              onClick={() => setModalAbierto("oferta")}
-            >
-              ⚡ Ofertas Relámpago
-            </button>
+          <form className="buscador-contenedor" onSubmit={buscar}>
+            <div className="buscador">
+              <span>🔍</span>
 
-            {/* Nuevo Botón: Haz parte de Zafiro Bloom Tours */}
-            <button
-              type="button"
-              onClick={() => navigate('/haz-parte')}
-              style={{
-                background: 'transparent',
-                border: '1px solid #ffb703',
-                color: '#ffb703',
-                padding: '8px 16px',
-                borderRadius: '20px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.background = '#ffb703';
-                e.currentTarget.style.color = '#000';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.color = '#ffb703';
-              }}
-            >
-              🌿 Haz parte de Zafiro Bloom Tours
-            </button>
-          </div>
+              <input
+                type="text"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                placeholder="Buscar por Departamento o Municipio (ej. Boyacá, Monguí)"
+              />
+
+              <button type="submit" className="boton buscador-boton">
+                Buscar
+              </button>
+            </div>
+          </form>
         )}
+      </header>
 
-        <div className="navbar-sesion">
-          <Link to="/login">Iniciar Sesión / Registrarse</Link>
-        </div>
-      </nav>
-
-      {enInicio && (
-        <form className="navbar-buscador-contenedor" onSubmit={manejarBusqueda}>
-          <div className="navbar-buscador">
-            <span className="navbar-buscador-icono">🔍</span>
-            <input
-              type="text"
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-              placeholder="Buscar por Departamento, Municipio o Feria (ej. Boyacá, Monguí)"
-            />
-            <button type="submit" className="boton navbar-buscador-boton">
-              Buscar
-            </button>
-          </div>
-        </form>
-      )}
-
-      {modalAbierto && (
+      {modal && (
         <ModalFerias
-          modo={modalAbierto}
-          terminoBusqueda={modalAbierto === "busqueda" ? terminoActivo : undefined}
-          onCerrar={() => setModalAbierto(null)}
+          modo={modal}
+          termino={modal === "busqueda" ? terminoActivo : undefined}
+          onCerrar={() => setModal(null)}
         />
       )}
     </>

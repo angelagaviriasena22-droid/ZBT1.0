@@ -1,203 +1,157 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services";
-import type { Feria, Depto, Destino } from "../types";
 
-export type ModoModalFerias = "feria" | "oferta" | "busqueda";
+import { busquedaService, type ResultadoBusqueda } from "../services/busquedaService";
+import { feriaService } from "../services/feriaService";
+import type { Feria } from "../types/feria";
+import { urlImagen } from "../utils/imagen";
+import "./ModalFerias.css";
+
+export type ModoModal = "feria" | "oferta" | "busqueda";
 
 interface Props {
-  modo: ModoModalFerias;
-  terminoBusqueda?: string;
+  modo: ModoModal;
+  termino?: string;
   onCerrar: () => void;
 }
 
-const TITULOS: Record<ModoModalFerias, string> = {
+const TITULOS: Record<ModoModal, string> = {
   feria: "Ferias y Fiestas del Mes",
   oferta: "Ofertas Relámpago",
   busqueda: "Resultados de la búsqueda",
 };
 
-function formatearFecha(fecha: string | null) {
-  if (!fecha) return null;
-  return new Date(fecha).toLocaleDateString("es-CO", {
+function fecha(valor: string | null) {
+  if (!valor) return null;
+    const [anio, mes, dia] = valor.slice(0, 10).split("-").map(Number);
+  return new Date(anio, mes - 1, dia).toLocaleDateString("es-CO", {
     day: "2-digit",
     month: "short",
     year: "numeric",
   });
 }
 
-function normalizar(texto: string) {
-  return texto
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, ""); // quita tildes/acentos
-}
-
-function coincide(texto: string | null | undefined, termino: string) {
-  return !!texto && normalizar(texto).includes(normalizar(termino));
-}
-
-function ModalFerias({ modo, terminoBusqueda, onCerrar }: Props) {
+function ModalFerias({ modo, termino, onCerrar }: Props) {
   const navigate = useNavigate();
-
   const [ferias, setFerias] = useState<Feria[]>([]);
-  const [deptos, setDeptos] = useState<Depto[]>([]);
-  const [destinos, setDestinos] = useState<Destino[]>([]);
+  const [resultado, setResultado] = useState<ResultadoBusqueda>({ departamentos: [], destinos: [] });
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     setCargando(true);
     setError("");
+    const peticion =
+      modo === "busqueda"
+        ? busquedaService.buscar(termino ?? "").then(setResultado)
+        : feriaService.listar(modo).then(setFerias);
 
-    let peticiones: Promise<unknown>[] = [];
-
-    if (modo === "busqueda") {
-      // La barra de búsqueda solo busca Departamentos y Municipios/Destinos.
-      if (!terminoBusqueda) {
-        setDeptos([]);
-        setDestinos([]);
-        setFerias([]);
-        setCargando(false);
-        return;
-      }
-      peticiones = [
-        api.get<Depto[]>("/deptos/").then((r) =>
-          setDeptos(r.data.filter((d) => coincide(d.nombre, terminoBusqueda)))
-        ),
-        api.get<Destino[]>("/destinos/").then((r) =>
-          setDestinos(r.data.filter((d) => coincide(d.nombre, terminoBusqueda)))
-        ),
-      ];
-      setFerias([]);
-    } else {
-      // Los botones "Ferias y Fiestas del Mes" / "Ofertas Relámpago"
-      // sí consultan la tabla de promociones, filtrando por tipo.
-      peticiones = [
-        api.get<Feria[]>("/ferias/", { params: { tipo: modo } }).then((r) => setFerias(r.data)),
-      ];
-      setDeptos([]);
-      setDestinos([]);
-    }
-
-    Promise.all(peticiones)
+    peticion
       .catch(() => setError("No se pudieron cargar los resultados. Intenta de nuevo."))
       .finally(() => setCargando(false));
-  }, [modo, terminoBusqueda]);
+  }, [modo, termino]);
 
-  function irADepto(id: number) {
+  function ir(ruta: string) {
     onCerrar();
-    navigate(`/destinos/${id}`);
+    navigate(ruta);
   }
 
-  function irADestino(id: number) {
-    onCerrar();
-    navigate(`/destino/${id}`);
-  }
-
-  const sinResultados =
+  const vacio =
     !cargando &&
     !error &&
     ferias.length === 0 &&
-    deptos.length === 0 &&
-    destinos.length === 0;
+    resultado.departamentos.length === 0 &&
+    resultado.destinos.length === 0;
 
   return (
-    <div className="modal-overlay" onClick={onCerrar}>
-      <div className="modal-ferias" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-ferias-encabezado">
+    <div className="modal-fondo" onClick={onCerrar}>
+      <div className="modal-caja" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-encabezado">
           <h2>
             {TITULOS[modo]}
-            {modo === "busqueda" && terminoBusqueda ? `: "${terminoBusqueda}"` : ""}
+            {modo === "busqueda" && termino ? `: "${termino}"` : ""}
           </h2>
-          <button className="modal-cerrar" onClick={onCerrar} aria-label="Cerrar">
-            ✕
-          </button>
+          <button className="modal-cerrar" onClick={onCerrar} aria-label="Cerrar">✕</button>
         </div>
 
-        <div className="modal-ferias-contenido">
-          {cargando && <p className="modal-mensaje">Cargando...</p>}
-          {error && <p className="error">{error}</p>}
-
-          {sinResultados && (
-            <p className="modal-mensaje">
+        <div className="modal-cuerpo">
+          {cargando && <p className="mensaje-carga">Cargando...</p>}
+          {error && <p className="mensaje-error">{error}</p>}
+          {vacio && (
+            <p className="mensaje-carga">
               {modo === "busqueda"
                 ? "No encontramos departamentos ni municipios con ese nombre."
-                : `No encontramos ${modo === "oferta" ? "ofertas" : "ferias"} por ahora. ¡Vuelve pronto!`}
+                : "No hay nada por ahora. ¡Vuelve pronto!"}
             </p>
           )}
 
-          {modo !== "busqueda" && ferias.length > 0 && (
-            <div className="lista-ferias">
-              {ferias.map((item) => (
-                <div key={item.id_feria} className={`tarjeta-feria tarjeta-feria-${item.tipo}`}>
-                  {item.foto_referencia && <img src={item.foto_referencia} alt={item.nombre} />}
-                  <div className="tarjeta-feria-cuerpo">
-                    <div className="tarjeta-feria-encabezado">
-                      <h3>{item.nombre}</h3>
-                      {item.tipo === "oferta" && item.descuento_porcentaje && (
-                        <span className="etiqueta-descuento">-{item.descuento_porcentaje}%</span>
+          {ferias.length > 0 && (
+            <div className="modal-lista">
+              {ferias.map((f) => (
+                <article key={f.id_feria} className={`modal-tarjeta modal-tarjeta-${f.tipo}`}>
+                  {f.foto_referencia && <img src={urlImagen(f.foto_referencia)} alt={f.nombre} />}
+                  <div className="modal-tarjeta-cuerpo">
+                    <div className="modal-tarjeta-titulo">
+                      <h3>{f.nombre}</h3>
+                      {f.tipo === "oferta" && f.descuento_porcentaje && (
+                        <span className="etiqueta-descuento">-{Number(f.descuento_porcentaje)}%</span>
                       )}
                     </div>
-
-                    {(item.nombre_destino || item.nombre_depto) && (
-                      <p className="tarjeta-feria-ubicacion">
-                        📍 {item.nombre_destino ?? item.nombre_depto}
-                        {item.nombre_destino && item.nombre_depto ? `, ${item.nombre_depto}` : ""}
+                    {(f.nombre_destino || f.nombre_depto) && (
+                      <p className="modal-ubicacion">
+                        📍 {[f.nombre_destino, f.nombre_depto].filter(Boolean).join(", ")}
                       </p>
                     )}
-
-                    {item.descripcion && <p>{item.descripcion}</p>}
-
-                    {(item.fecha_inicio || item.fecha_fin) && (
-                      <p className="tarjeta-feria-fechas">
-                        🗓️ {formatearFecha(item.fecha_inicio) ?? "Fecha por confirmar"}
-                        {item.fecha_fin ? ` – ${formatearFecha(item.fecha_fin)}` : ""}
+                    {f.descripcion && <p>{f.descripcion}</p>}
+                    {(f.fecha_inicio || f.fecha_fin) && (
+                      <p className="modal-fechas">
+                        🗓️ {fecha(f.fecha_inicio) ?? "Por confirmar"}
+                        {f.fecha_fin ? ` – ${fecha(f.fecha_fin)}` : ""}
                       </p>
                     )}
                   </div>
-                </div>
+                </article>
               ))}
             </div>
           )}
 
-          {modo === "busqueda" && deptos.length > 0 && (
+          {resultado.departamentos.length > 0 && (
             <>
               <h3 className="modal-subtitulo">Departamentos</h3>
-              <div className="lista-ferias">
-                {deptos.map((depto) => (
-                  <div
-                    key={depto.id_depto}
-                    className="tarjeta-feria tarjeta-lugar"
-                    onClick={() => irADepto(depto.id_depto)}
+              <div className="modal-lista">
+                {resultado.departamentos.map((d) => (
+                  <article
+                    key={d.id_depto}
+                    className="modal-tarjeta modal-tarjeta-click"
+                    onClick={() => ir(`/destinos/${d.id_depto}`)}
                   >
-                    {depto.foto_referencia && <img src={depto.foto_referencia} alt={depto.nombre} />}
-                    <div className="tarjeta-feria-cuerpo">
-                      <h3>{depto.nombre}</h3>
-                      {depto.descripcion && <p>{depto.descripcion}</p>}
+                    {d.foto_referencia && <img src={urlImagen(d.foto_referencia)} alt={d.nombre} />}
+                    <div className="modal-tarjeta-cuerpo">
+                      <h3>{d.nombre}</h3>
+                      {d.descripcion && <p>{d.descripcion}</p>}
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
             </>
           )}
 
-          {modo === "busqueda" && destinos.length > 0 && (
+          {resultado.destinos.length > 0 && (
             <>
               <h3 className="modal-subtitulo">Municipios y destinos</h3>
-              <div className="lista-ferias">
-                {destinos.map((destino) => (
-                  <div
-                    key={destino.id_destino}
-                    className="tarjeta-feria tarjeta-lugar"
-                    onClick={() => irADestino(destino.id_destino)}
+              <div className="modal-lista">
+                {resultado.destinos.map((d) => (
+                  <article
+                    key={d.id_destino}
+                    className="modal-tarjeta modal-tarjeta-click"
+                    onClick={() => ir(`/destino/${d.id_destino}`)}
                   >
-                    {destino.foto_referencia && <img src={destino.foto_referencia} alt={destino.nombre} />}
-                    <div className="tarjeta-feria-cuerpo">
-                      <h3>{destino.nombre}</h3>
-                      {destino.generalidades && <p>{destino.generalidades}</p>}
+                    {d.foto_referencia && <img src={urlImagen(d.foto_referencia)} alt={d.nombre} />}
+                    <div className="modal-tarjeta-cuerpo">
+                      <h3>{d.nombre}</h3>
+                      {d.generalidades && <p>{d.generalidades}</p>}
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
             </>

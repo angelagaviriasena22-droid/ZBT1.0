@@ -1,29 +1,23 @@
 import { useNavigate } from "react-router-dom";
-import type { Depto } from "../types";
 
-interface Props {
-  departamento: Depto;
-}
+import type { Depto } from "../types/depto";
+import { urlImagen } from "../utils/imagen";
+import "./DepartamentoCard.css";
 
-function DepartamentoCard({ departamento }: Props) {
+function DepartamentoCard({ depto }: { depto: Depto }) {
   const navigate = useNavigate();
 
   return (
-    <div className="tarjeta-departamento">
-      <img
-        src={departamento.foto_referencia ?? ""}
-        alt={departamento.nombre}
-        className="imagen-tarjeta"
-      />
-      <h3>{departamento.nombre}</h3>
-      {departamento.descripcion && <p>{departamento.descripcion}</p>}
-      <button
-        className="boton"
-        onClick={() => navigate(`/destinos/${departamento.id_depto}`)}
-      >
-        Ver destinos
-      </button>
-    </div>
+    <article className="depto-card" onClick={() => navigate(`/destinos/${depto.id_depto}`)}>
+      <div className="depto-card-foto">
+        <img src={urlImagen(depto.foto_referencia)} alt={depto.nombre} />
+        <h3>{depto.nombre}</h3>
+      </div>
+      <div className="depto-card-cuerpo">
+        {depto.descripcion && <p>{depto.descripcion}</p>}
+        <button className="boton" type="button">Ver destinos</button>
+      </div>
+    </article>
   );
 }
 
