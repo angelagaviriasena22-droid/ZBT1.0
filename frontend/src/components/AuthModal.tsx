@@ -178,7 +178,7 @@ function AuthModal() {
           </button>
         </form>
 
-        <BotonGoogle onCredencial={conGoogle} onError={setError} />
+                <BotonGoogle modo={registro ? "registro" : "ingresar"} onCredencial={conGoogle} onError={setError} />
 
         <button
           className="auth-cambio"

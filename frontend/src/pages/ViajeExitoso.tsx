@@ -54,6 +54,10 @@ function ViajeExitoso() {
           <strong>{moneda(viaje.precio)}</strong>
         </div>
       </section>
+      
+      <p className="exito-lema" style={{ fontSize: "0.9rem" }}>
+        Cuando termine tu estancia podrás calificar el hotel desde Mis viajes.
+      </p>
 
       <div className="exito-botones">
         <button className="boton exito-boton" type="button" onClick={() => descargarRecibo(viaje, usuario)}>

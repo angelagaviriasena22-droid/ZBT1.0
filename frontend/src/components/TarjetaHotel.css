@@ -111,3 +111,20 @@
     text-decoration: underline;
     cursor: pointer;
 }
+
+.tarjeta-hotel-resenas {
+    align-self: flex-start;
+    padding: 0.4rem 0.9rem;
+    background: white;
+    border: 1px solid #f5a623;
+    border-radius: 6px;
+    color: #b87400;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.tarjeta-hotel-resenas:hover {
+    background: #f5a623;
+    color: white;
+}

@@ -90,8 +90,14 @@ function CrearViaje() {
           }}
         />
       )}
-
-      {hotelResenas && <ModalResenas hotel={hotelResenas} onCerrar={() => setHotelResenas(null)} />}
+      
+      {hotelResenas && (
+        <ModalResenas
+          hotel={hotelResenas}
+          onCerrar={() => setHotelResenas(null)}
+          onActualizado={cargarHoteles}
+        />
+      )}
     </div>
   );
 }

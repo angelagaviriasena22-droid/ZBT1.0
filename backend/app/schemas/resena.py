@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -19,3 +19,21 @@ class ResenaOut(BaseModel):
     comentario: str | None = None
     fecha_registro: datetime
     autor: str
+
+
+class ResenaPublicaOut(BaseModel):
+    id_resena: int
+    id_hotel: int
+    id_destino: int
+    nombre_hotel: str
+    nombre_destino: str
+    calificacion: int
+    comentario: str | None = None
+    fecha_registro: datetime
+    autor: str
+
+
+class ViajePendienteOut(BaseModel):
+    id_vp: int
+    fecha_inicial: date
+    fecha_final: date

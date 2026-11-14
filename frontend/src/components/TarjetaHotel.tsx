@@ -33,12 +33,10 @@ function TarjetaHotel({ hotel, onElegir, onVerResenas }: Props) {
               ? `${promedio.toFixed(1)} (${total} ${total === 1 ? "reseña" : "reseñas"})`
               : "Sin reseñas todavía"}
           </span>
-          {total > 0 && (
-            <button type="button" className="tarjeta-hotel-enlace" onClick={() => onVerResenas(hotel)}>
-              Ver reseñas
-            </button>
-          )}
         </div>
+        <button type="button" className="tarjeta-hotel-resenas" onClick={() => onVerResenas(hotel)}>
+          ⭐ Ver reseñas y calificar
+        </button>
 
         {hotel.direccion && <p className="tarjeta-hotel-dir">📍 {hotel.direccion}</p>}
         {hotel.descripcion && <p className="tarjeta-hotel-desc">{hotel.descripcion}</p>}

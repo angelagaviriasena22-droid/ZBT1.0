@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import DepartamentoCard from "../components/DepartamentoCard";
+import ResenasRecientes from "../components/ResenasRecientes";
 import { deptoService } from "../services/deptoService";
 import type { Depto } from "../types/depto";
 import "./Home.css";
@@ -39,6 +40,8 @@ function Home() {
           ))}
         </div>
       </section>
+
+      <ResenasRecientes />
     </>
   );
 }

@@ -1,9 +1,12 @@
 from fastapi import HTTPException
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.models import Resena, Usuario, ViajePersonalizado
-from app.schemas.resena import ResenaCrear, ResenaOut
+from app.models import Destino, Hotel, Resena, Usuario, ViajePersonalizado
+from app.schemas.resena import (
+    ResenaCrear, ResenaOut, ResenaPublicaOut, ViajePendienteOut,
+)
 from app.services.viaje_service import finalizar_vencidos
 
 
@@ -62,3 +65,45 @@ def listar_por_hotel(db: Session, id_hotel: int) -> list[ResenaOut]:
 def viajes_calificados(db: Session, usuario: Usuario) -> list[int]:
     filas = db.query(Resena.id_vp).filter(Resena.id_usuario == usuario.id_usuario).all()
     return [f[0] for f in filas]
+
+
+def recientes(db: Session, limite: int = 6) -> list[ResenaPublicaOut]:
+    filas = (
+        db.query(Resena, Usuario, Hotel, Destino)
+        .join(Usuario, Usuario.id_usuario == Resena.id_usuario)
+        .join(Hotel, Hotel.id_hotel == Resena.id_hotel)
+        .join(Destino, Destino.id_destino == Hotel.id_destino)
+        .order_by(Resena.fecha_registro.desc())
+        .limit(limite)
+        .all()
+    )
+    return [
+        ResenaPublicaOut(
+            id_resena=r.id_resena, id_hotel=h.id_hotel, id_destino=d.id_destino,
+            nombre_hotel=h.nombre, nombre_destino=d.nombre,
+            calificacion=r.calificacion, comentario=r.comentario,
+            fecha_registro=r.fecha_registro, autor=_autor(u),
+        )
+        for r, u, h, d in filas
+    ]
+
+
+def pendientes(db: Session, usuario: Usuario, id_hotel: int) -> list[ViajePendienteOut]:
+    """Estadías terminadas del usuario en ese hotel que todavía no calificó."""
+    finalizar_vencidos(db)
+    ya_calificados = select(Resena.id_vp).where(Resena.id_usuario == usuario.id_usuario)
+    viajes = (
+        db.query(ViajePersonalizado)
+        .filter(
+            ViajePersonalizado.id_usuario == usuario.id_usuario,
+            ViajePersonalizado.id_hotel == id_hotel,
+            ViajePersonalizado.estado == "finalizado",
+            ViajePersonalizado.id_vp.notin_(ya_calificados),
+        )
+        .order_by(ViajePersonalizado.fecha_final.desc())
+        .all()
+    )
+    return [
+        ViajePendienteOut(id_vp=v.id_vp, fecha_inicial=v.fecha_inicial, fecha_final=v.fecha_final)
+        for v in viajes
+    ]
