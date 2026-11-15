@@ -28,13 +28,12 @@ app = FastAPI(title="Zafiro Bloom Tours API", version="2.0.0")
 # CORS: el frontend local puede abrirse en cualquier puerto (5173, 5174...)
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+",
+    allow_origins=["*"],  # Permitir todos los orígenes temporalmente para descartar bloqueos
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Públicos
+# Públicoss
 app.include_router(deptos.router)
 app.include_router(destinos.router)
 app.include_router(hoteles.router)

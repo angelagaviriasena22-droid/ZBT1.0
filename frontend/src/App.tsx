@@ -24,6 +24,10 @@ function App() {
       <main className="contenido-principal">
         <Routes>
           <Route path="/" element={<Home />} />
+          
+          {/* Ruta agregada para evitar el error en /deptos */}
+          <Route path="/deptos" element={<Home />} /> 
+          
           <Route path="/destinos/:idDepto" element={<DestinosPorDepto />} />
           <Route path="/destino/:idDestino" element={<DetalleDestino />} />
           <Route path="/crear-viaje/:idDestino" element={<CrearViaje />} />

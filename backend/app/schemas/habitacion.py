@@ -1,18 +1,18 @@
-from decimal import Decimal
+from pydantic import BaseModel
 from typing import Optional
-
-from pydantic import BaseModel, ConfigDict
-
+from decimal import Decimal
 
 class HabitacionOut(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
     id_habitacion: int
     id_hotel: int
-    nombre: str
+    nombre: Optional[str] = None
     descripcion: Optional[str] = None
     tipo_cama: Optional[str] = None
-    capacidad: int
-    precio: Decimal
+    capacidad: Optional[int] = 2
+    precio: Optional[Decimal] = None
     foto_referencia: Optional[str] = None
-    disponible: bool = True  # se calcula según las fechas pedidas
+    activa: bool = True
+    disponible: bool = True
+
+    class Config:
+        from_attributes = True  # Permite leer directamente desde modelos de SQLAlchemy / vistas

@@ -23,7 +23,7 @@ class HabitacionVista(Base):
 
     id_habitacion = Column(Integer, primary_key=True)
     id_hotel = Column(Integer)
-    nombre = Column(String)
+    #nombre = Column(String)
     descripcion = Column(Text)
     tipo_cama = Column(String)
     capacidad = Column(Integer)

@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-
 import type { Depto } from "../types/depto";
 import { urlImagen } from "../utils/imagen";
 import "./DepartamentoCard.css";

@@ -1,9 +1,9 @@
 from datetime import date
-
 from fastapi import HTTPException
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+# Importamos la vista HabitacionVista en lugar de la tabla física
 from app.models.habitacion import HabitacionVista
 from app.schemas.habitacion import HabitacionOut
 
@@ -12,7 +12,7 @@ def _ids_ocupadas(db: Session, ini: date, fin: date) -> set[int]:
     filas = db.execute(
         text("""
             SELECT DISTINCT id_habitacion FROM viaje_habitacion
-            WHERE activa AND fechas && daterange(:ini, :fin, '[)')
+            WHERE activa && daterange(:ini, :fin, '[)')
         """),
         {"ini": ini, "fin": fin},
     )
@@ -30,7 +30,8 @@ def listar_habitaciones(
     if fecha_inicial and fecha_final and fecha_final <= fecha_inicial:
         raise HTTPException(400, "La fecha de salida debe ser posterior a la de llegada")
 
-    query = db.query(HabitacionVista).order_by(HabitacionVista.precio)
+    # Consultamos la vista que ya contiene todos los campos generados
+    query = db.query(HabitacionVista).order_by(HabitacionVista.id_habitacion)
     if id_hotel:
         query = query.filter(HabitacionVista.id_hotel == id_hotel)
     habitaciones = query.all()
