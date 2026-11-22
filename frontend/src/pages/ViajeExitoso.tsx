@@ -5,6 +5,7 @@ import type { Viaje } from "../types/viaje";
 import { fechaCorta, moneda } from "../utils/formato";
 import { descargarRecibo } from "../utils/recibo";
 import "./ViajeExitoso.css";
+import { CheckCircle, FileText } from "lucide-react";
 
 function ViajeExitoso() {
   const { state } = useLocation();
@@ -16,7 +17,9 @@ function ViajeExitoso() {
 
   return (
     <div className="exito">
-      <div className="exito-icono">✅</div>
+      <div className="exito-icono">
+        <CheckCircle size={48} />
+      </div>
       <h1>¡Reserva confirmada!</h1>
       <p className="exito-lema">Tu aventura en {viaje.nombre_destino} ya está lista.</p>
 
@@ -61,7 +64,7 @@ function ViajeExitoso() {
 
       <div className="exito-botones">
         <button className="boton exito-boton" type="button" onClick={() => descargarRecibo(viaje, usuario)}>
-          📄 Descargar recibo (PDF)
+          <FileText size={18} /> Descargar recibo (PDF)
         </button>
         <Link to="/mis-viajes" className="exito-secundario">Ver mis viajes</Link>
         <Link to="/" className="exito-secundario">Seguir explorando</Link>

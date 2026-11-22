@@ -5,6 +5,7 @@ import type { Viaje } from "../types/viaje";
 import { mensajeError } from "../utils/errores";
 import Estrellas from "./Estrellas";
 import "./ModalResena.css";
+import { X, Hotel } from "lucide-react";
 
 interface Props {
   viaje: Viaje;
@@ -43,9 +44,12 @@ function ModalResena({ viaje, onCerrar, onGuardada }: Props) {
   return (
     <div className="res-fondo">
       <div className="res-caja">
-        <button className="res-cerrar" type="button" onClick={onCerrar} aria-label="Cerrar">✕</button>
+        <button className="res-cerrar" type="button" onClick={onCerrar} aria-label="Cerrar">
+          <X size={20} />
+        </button>
         <h2>Califica tu estancia</h2>
-        <p className="res-sub">🏨 {viaje.nombre_hotel} · {viaje.nombre_destino}</p>
+        <p className="res-sub">
+          <Hotel size={16} /> {viaje.nombre_hotel} · {viaje.nombre_destino}</p>
 
         <form onSubmit={enviar} noValidate>
           <div className="res-campo">

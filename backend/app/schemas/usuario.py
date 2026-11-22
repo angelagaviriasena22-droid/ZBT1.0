@@ -51,3 +51,17 @@ class TokenOut(BaseModel):
     access_token: str
     token_type: str = "bearer"
     usuario: UsuarioOut
+
+
+class LoginCodigoIn(BaseModel):
+    id_verificacion: str = Field(min_length=36, max_length=36)
+    codigo: str = Field(pattern=r"^[0-9]{6}$")
+
+
+class LoginInicioOut(BaseModel):
+    requiere_verificacion: bool
+    mensaje: str | None = None
+    id_verificacion: str | None = None
+    access_token: str | None = None
+    token_type: str | None = "bearer"
+    usuario: UsuarioOut | None = None

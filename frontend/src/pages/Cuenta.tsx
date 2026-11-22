@@ -6,6 +6,13 @@ import { useAuth } from "../context/AuthContext";
 import { usuarioService } from "../services/usuarioService";
 import { mensajeError } from "../utils/errores";
 import "./Cuenta.css";
+import {
+  Lock,
+  User,
+  Luggage,
+  House,
+  LogOut
+} from "lucide-react";
 
 const ROLES: Record<string, string> = {
   usuario: "Viajero",
@@ -35,7 +42,7 @@ function Cuenta() {
       <div className="cuenta">
         <EncabezadoPagina titulo="Mi cuenta" />
         <div className="cuenta-vacia">
-          <span>🔒</span>
+          <Lock size={22} />
           <p>Inicia sesión para ver tu cuenta.</p>
           <button className="boton" onClick={abrirAuth}>Iniciar sesión</button>
         </div>
@@ -52,7 +59,7 @@ function Cuenta() {
     setGuardando(true);
     try {
       actualizarUsuario(await usuarioService.editar(form));
-      setMensaje("✅ Tus datos se guardaron correctamente.");
+      setMensaje("Tus datos se guardaron correctamente.");
     } catch (err) {
       setError(mensajeError(err, "No se pudieron guardar los cambios."));
     } finally {
@@ -77,17 +84,17 @@ function Cuenta() {
 
       <div className="cuenta-grid">
         <aside className="cuenta-perfil">
-          <div className="cuenta-avatar">{iniciales || "👤"}</div>
+          <div className="cuenta-avatar">{iniciales || <User size={28} />}</div>
           <h2>{usuario.nombre} {usuario.apellidos}</h2>
           <p className="cuenta-correo">{usuario.correo}</p>
           <span className="cuenta-rol">{ROLES[usuario.rol] ?? usuario.rol}</span>
 
           <nav className="cuenta-atajos">
             {usuario.rol === "usuario" && (
-              <Link to="/mis-viajes">🧳 Mis viajes</Link>
+              <Link to="/mis-viajes"><Luggage size={18} /> Mis viajes</Link>
             )}
 
-            <Link to="/">🏠 Ir al inicio</Link>
+            <Link to="/"><House size={18} /> Ir al inicio</Link>
 
             <button
               onClick={() => {
@@ -95,7 +102,7 @@ function Cuenta() {
                 navigate("/");
               }}
             >
-              🚪 Cerrar sesión
+              <LogOut size={18} /> Cerrar sesión
             </button>
           </nav>
 

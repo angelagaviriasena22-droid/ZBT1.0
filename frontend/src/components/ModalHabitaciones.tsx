@@ -10,6 +10,7 @@ import { mensajeError } from "../utils/errores";
 import { calcularNoches, hoy, moneda } from "../utils/formato";
 import { urlImagen } from "../utils/imagen";
 import "./ModalHabitaciones.css";
+import { X, Sparkles, User, BedDouble } from "lucide-react";
 
 interface Props {
   hotel: Hotel;
@@ -38,7 +39,9 @@ function ModalHabitaciones({ hotel, onCerrar, onReservado }: Props) {
     habitacionService
       .listar(hotel.id_hotel, fechasValidas ? inicio : undefined, fechasValidas ? fin : undefined)
       .then((lista) => {
-        setHabitaciones(lista);
+    console.log("Habitaciones recibidas:", lista);
+    console.log("Cantidad de habitaciones:", lista.length);
+    setHabitaciones(lista);
         // quita de la selección las habitaciones que ya no están libres en esas fechas
         setSeleccion((s) => {
           const libres = new Set(lista.filter((h) => h.disponible).map((h) => h.id_habitacion));
@@ -149,7 +152,9 @@ function ModalHabitaciones({ hotel, onCerrar, onReservado }: Props) {
   return (
     <div className="hab-fondo" onClick={onCerrar}>
       <div className="hab-caja" onClick={(e) => e.stopPropagation()}>
-        <button className="hab-cerrar" onClick={onCerrar} aria-label="Cerrar">✕</button>
+        <button className="hab-cerrar" onClick={onCerrar} aria-label="Cerrar">
+           <X size={20} />
+        </button>
         <h2>Escoge tus habitaciones en {hotel.nombre}</h2>
 
         <div className="hab-datos">
@@ -170,7 +175,7 @@ function ModalHabitaciones({ hotel, onCerrar, onReservado }: Props) {
             </div>
           </label>
           <button className="boton hab-sugerir" type="button" onClick={sugerir}>
-            ✨ Sugerir habitaciones
+            <Sparkles size={18} />Sugerir habitaciones
           </button>
         </div>
 
@@ -198,8 +203,8 @@ function ModalHabitaciones({ hotel, onCerrar, onReservado }: Props) {
                   <div className="hab-item-cuerpo">
                     <h3>{h.nombre}</h3>
                     <p>
-                      👤 Máximo {h.capacidad} {h.capacidad === 1 ? "persona" : "personas"}
-                      {h.tipo_cama && <> · 🛏️ {h.tipo_cama}</>}
+                      <User size={16} /> Máximo {h.capacidad} {h.capacidad === 1 ? "persona" : "personas"}
+                      {h.tipo_cama && <> · <BedDouble size={16} /> {h.tipo_cama}</>}
                     </p>
                     <p className="hab-precio">
                       Por noche: <strong>{moneda(h.precio)}</strong>

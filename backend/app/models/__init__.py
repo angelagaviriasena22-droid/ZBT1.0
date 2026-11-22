@@ -11,3 +11,4 @@ from app.models.habitacion import Habitacion, HabitacionVista
 from app.models.viaje_personalizado import ViajePersonalizado
 from app.models.viaje_habitacion import ViajeHabitacion
 from app.models.resena import Resena
+from app.models.codigo_verificacion import CodigoVerificacion

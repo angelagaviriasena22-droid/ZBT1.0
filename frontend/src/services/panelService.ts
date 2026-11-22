@@ -1,15 +1,46 @@
 import api from "./api";
-import type { HabitacionForm, HabitacionPanel, HotelPanel, ReservaHotel } from "../types/panel";
+import type {
+  DestinoCrearForm,
+  DestinoPanelOut,
+  HabitacionForm,
+  HabitacionPanel,
+  HotelEditarForm,
+  HotelPanel,
+  ReservaHotel,
+} from "../types/panel";
 
 export const panelService = {
   hoteles: () => api.get<HotelPanel[]>("/panel/hoteles").then((r) => r.data),
+
+  editarHotel: (idHotel: number, datos: Partial<HotelEditarForm>) =>
+    api
+      .put<HotelPanel>(`/panel/hoteles/${idHotel}`, {
+        ...datos,
+        foto_referencia: datos.foto_referencia || null,
+      })
+      .then((r) => r.data),
+
+  crearDestino: (datos: DestinoCrearForm) =>
+    api
+      .post<DestinoPanelOut>("/panel/destinos", {
+        ...datos,
+        foto_referencia: datos.foto_referencia || null,
+        clima: datos.clima || null,
+        generalidades: datos.generalidades || null,
+      })
+      .then((r) => r.data),
+
   habitaciones: (idHotel: number) =>
     api.get<HabitacionPanel[]>(`/panel/hoteles/${idHotel}/habitaciones`).then((r) => r.data),
+
   crearHabitacion: (idHotel: number, datos: HabitacionForm) =>
     api.post<HabitacionPanel>(`/panel/hoteles/${idHotel}/habitaciones`, normalizar(datos)).then((r) => r.data),
+
   editarHabitacion: (id: number, datos: Partial<HabitacionForm> & { activa?: boolean }) =>
     api.put<HabitacionPanel>(`/panel/habitaciones/${id}`, datos).then((r) => r.data),
+
   quitarHabitacion: (id: number) => api.delete(`/panel/habitaciones/${id}`),
+
   reservas: (idHotel: number) =>
     api.get<ReservaHotel[]>(`/panel/hoteles/${idHotel}/reservas`).then((r) => r.data),
 };

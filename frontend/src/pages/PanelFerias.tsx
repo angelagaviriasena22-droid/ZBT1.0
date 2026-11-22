@@ -10,6 +10,7 @@ import { mensajeError } from "../utils/errores";
 import { fechaCorta } from "../utils/formato";
 import "./PanelFerias.css";
 import EncabezadoPagina from "../components/EncabezadoPagina";
+import { MapPin, CalendarDays } from "lucide-react";
 
 const VACIO = {
   nombre: "",
@@ -239,11 +240,23 @@ function PanelFerias() {
               {!f.activo && <span className="pf-etiqueta pf-oculta">oculta</span>}
               <small>
                 {f.tipo === "oferta" ? "Oferta" : "Feria"}
-                {(f.nombre_destino || f.nombre_depto) &&
-                  ` · 📍 ${[f.nombre_destino, f.nombre_depto].filter(Boolean).join(", ")}`}
-                {f.fecha_inicio && ` · 🗓️ ${fechaCorta(f.fecha_inicio)}`}
+                {(f.nombre_destino || f.nombre_depto) && (
+                  <>
+                    · <MapPin size={15} />
+                    {[f.nombre_destino, f.nombre_depto].filter(Boolean).join(", ")}
+                  </>
+                )}
+     
+                {f.fecha_inicio && (
+                  <>
+                · <CalendarDays size={15} />
+                {fechaCorta(f.fecha_inicio)}
+                  </>
+                )}
+
                 {f.fecha_fin && ` – ${fechaCorta(f.fecha_fin)}`}
-              </small>
+             </small>
+            
             </div>
             <div className="pf-acciones">
               <button onClick={() => editar(f)}>Editar</button>

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, Boolean
+from sqlalchemy import Column, String, DateTime, Boolean, Integer, ForeignKey
 from sqlalchemy.sql import func
 from app.database.connection import Base
 
@@ -14,7 +14,19 @@ class Usuario(Base):
     correo = Column(String, unique=True, nullable=False)
     telefono = Column(String)
     documento = Column(String)
-    rol = Column(String, nullable=False, default="usuario")  # usuario | admin_hotel | super_admin
+
+    rol = Column(
+        String,
+        nullable=False,
+        default="usuario"
+    )  # usuario | admin_hotel | super_admin
+
+    id_depto = Column(
+        Integer,
+        ForeignKey("deptos.id_depto"),
+        nullable=True
+    )
+
     contrasena = Column(String, nullable=False)
     google_id = Column(String, unique=True, nullable=True)
     activo = Column(Boolean, nullable=False, default=True)

@@ -1,6 +1,7 @@
+
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-import { authService } from "../services/authService";
+import { authService, type RespuestaLogin } from "../services/authService";
 import type { RegistroDatos, RespuestaAuth, Usuario } from "../types/usuario";
 
 interface AuthContextValor {
@@ -8,7 +9,8 @@ interface AuthContextValor {
   modalAbierto: boolean;
   abrirAuth: () => void;
   cerrarAuth: () => void;
-  iniciarSesion: (correo: string, contrasena: string) => Promise<void>;
+  iniciarSesion: (correo: string, contrasena: string) => Promise<RespuestaLogin>;
+  verificarCodigo: (id_verificacion: string, codigo: string) => Promise<void>;
   iniciarConGoogle: (credencial: string) => Promise<void>;
   registrarse: (datos: RegistroDatos) => Promise<void>;
   cerrarSesion: () => void;
@@ -30,12 +32,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [usuario, setUsuario] = useState<Usuario | null>(leerUsuarioGuardado);
   const [modalAbierto, setModalAbierto] = useState(false);
 
-  // Si el servidor dice que la sesión ya no sirve, se cierra y se abre el login
   useEffect(() => {
     const alExpirar = () => {
       setUsuario(null);
       setModalAbierto(true);
     };
+
     window.addEventListener("sesion-expirada", alExpirar);
     return () => window.removeEventListener("sesion-expirada", alExpirar);
   }, []);
@@ -47,7 +49,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function iniciarSesion(correo: string, contrasena: string) {
-    guardarSesion(await authService.login(correo, contrasena));
+    const respuesta = await authService.login(correo, contrasena);
+
+    if (
+      !respuesta.requiere_verificacion &&
+      respuesta.access_token &&
+      respuesta.usuario
+    ) {
+      guardarSesion(respuesta as RespuestaAuth);
+    }
+
+    return respuesta;
+  }
+
+  async function verificarCodigo(id_verificacion: string, codigo: string) {
+    const respuesta = await authService.verificarCodigo(id_verificacion, codigo);
+    guardarSesion(respuesta);
   }
 
   async function iniciarConGoogle(credencial: string) {
@@ -77,6 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         abrirAuth: () => setModalAbierto(true),
         cerrarAuth: () => setModalAbierto(false),
         iniciarSesion,
+        verificarCodigo,
         iniciarConGoogle,
         registrarse,
         cerrarSesion,
@@ -90,6 +108,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const contexto = useContext(AuthContext);
-  if (!contexto) throw new Error("useAuth debe usarse dentro de AuthProvider");
+
+  if (!contexto) {
+    throw new Error("useAuth debe usarse dentro de AuthProvider");
+  }
+
   return contexto;
 }

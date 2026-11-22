@@ -11,6 +11,14 @@ import { mensajeError } from "../utils/errores";
 import { fechaCorta, hoy, moneda } from "../utils/formato";
 import { descargarRecibo } from "../utils/recibo";
 import "./MisViajes.css";
+import {
+  Lock,
+  Luggage,
+  Hotel,
+  BedDouble,
+  FileText,
+  CheckCircle
+} from "lucide-react";
 
 type Filtro = "proximos" | "pasados" | "cancelados";
 
@@ -78,7 +86,7 @@ function MisViajes() {
       <div className="viajes">
         <EncabezadoPagina titulo="Mis viajes" />
         <div className="viajes-vacio">
-          <span>🔒</span>
+          <span><Lock size={30} /></span>
           <p>Inicia sesión para ver tus reservas.</p>
           <button className="boton" onClick={abrirAuth}>Iniciar sesión</button>
         </div>
@@ -110,7 +118,7 @@ function MisViajes() {
 
       {!cargando && visibles.length === 0 && (
         <div className="viajes-vacio">
-          <span>🧳</span>
+          <span><Luggage size={30} /></span>
           <p>
             {filtro === "proximos"
               ? "No tienes viajes próximos. ¿A dónde quieres ir?"
@@ -131,7 +139,7 @@ function MisViajes() {
               <div className="viaje-cabecera">
                 <div>
                   <h2>{v.nombre_destino}</h2>
-                  <p className="viaje-hotel">🏨 {v.nombre_hotel}</p>
+                  <p className="viaje-hotel"><Hotel size={18} /> {v.nombre_hotel}</p>
                 </div>
                 <span className={`viaje-estado estado-${clase}`}>
                   {clase === "proximos" ? "Próximo" : clase === "pasados" ? "Finalizado" : "Cancelado"}
@@ -174,7 +182,7 @@ function MisViajes() {
                 <div className="viaje-acciones">
                   {clase !== "cancelados" && (
                     <button className="viaje-recibo" onClick={() => descargarRecibo(v, usuario)}>
-                      📄 Recibo PDF
+                      <FileText size={20} /> Recibo PDF
                     </button>
                   )}
 
@@ -183,7 +191,7 @@ function MisViajes() {
                       <span className="viaje-calificada">✅ Ya calificaste</span>
                     ) : (
                       <button className="viaje-calificar" onClick={() => setViajeAResenar(v)}>
-                        ⭐ Calificar estancia
+                        <CheckCircle size={20} /> Calificar estancia
                       </button>
                     )
                   )}

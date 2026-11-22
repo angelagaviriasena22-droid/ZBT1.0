@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import ModalHabitaciones from "../components/ModalHabitaciones";
-import ModalResenas from "../components/ModalResenas";
+import { ModalResenas } from "../components/ModalResenas";
 import TarjetaHotel from "../components/TarjetaHotel";
 import TarjetaInfo from "../components/TarjetaInfo";
 import { actividadService } from "../services/actividadService";
@@ -12,6 +12,7 @@ import { transporteService } from "../services/transporteService";
 import type { Hotel } from "../types/hotel";
 import type { Informacion } from "../types/informacion";
 import "./CrearViaje.css";
+import { Utensils, Bus, Footprints } from "lucide-react";
 
 function CrearViaje() {
   const { idDestino } = useParams<{ idDestino: string }>();
@@ -24,6 +25,9 @@ function CrearViaje() {
   const [hotelElegido, setHotelElegido] = useState<Hotel | null>(null);
   const [hotelResenas, setHotelResenas] = useState<Hotel | null>(null);
   const [error, setError] = useState("");
+
+  // Obtener el usuario logueado desde el localStorage (ajusta la clave si usas otra)
+  const usuarioLogueado = JSON.parse(localStorage.getItem("usuario") || "null");
 
   function cargarHoteles() {
     if (idDestino) hotelService.listar(idDestino).then(setHoteles);
@@ -59,16 +63,16 @@ function CrearViaje() {
       {error && <p className="mensaje-error">{error}</p>}
 
       <section className="crear-viaje-info">
-        <TarjetaInfo titulo="Gastronomía" icono="🍴" color="#f7a623" items={gastronomia} />
-        <TarjetaInfo titulo="Transporte" icono="🚌" color="#2bb673" items={transporte} />
-        <TarjetaInfo titulo="Actividades" icono="🥾" color="#2788d8" items={actividades} />
+        <TarjetaInfo titulo="Gastronomía" icono={<Utensils />} color="#f7a623" items={gastronomia} />
+        <TarjetaInfo titulo="Transporte" icono={<Bus />} color="#2bb673" items={transporte} />
+        <TarjetaInfo titulo="Actividades" icono={<Footprints />} color="#2788d8" items={actividades} />
       </section>
 
       <section>
         <h2 className="crear-viaje-subtitulo">Escoge tu hotel</h2>
         {hoteles.length === 0 && <p>Aún no hay hoteles registrados en este destino.</p>}
         <div className="crear-viaje-hoteles">
-          {hoteles.map((h) => (
+          {hoteles.map((h: Hotel) => (
             <TarjetaHotel
               key={h.id_hotel}
               hotel={h}
@@ -93,9 +97,12 @@ function CrearViaje() {
       
       {hotelResenas && (
         <ModalResenas
-          hotel={hotelResenas}
-          onCerrar={() => setHotelResenas(null)}
-          onActualizado={cargarHoteles}
+          isOpen={!!hotelResenas}
+          onClose={() => setHotelResenas(null)}
+          hotelId={String(hotelResenas.id_hotel)}
+          nombreHotel={hotelResenas.nombre}
+          usuarioLogueado={usuarioLogueado}
+          tieneReservaActiva={true} 
         />
       )}
     </div>

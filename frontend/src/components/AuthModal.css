@@ -124,3 +124,141 @@
     border-color: var(--rojo);
     background: #fff5f5;
 }
+
+
+/* Selector moderno de ciudades */
+
+.ciudad-selector {
+  position: relative;
+  width: 100%;
+}
+
+.ciudad-input-contenedor {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border: 1px solid #ded6ec;
+  border-radius: 12px;
+  padding: 0 12px;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ciudad-input-contenedor:focus-within {
+  border-color: #8955c7;
+  box-shadow: 0 0 0 3px rgba(137, 85, 199, 0.13);
+}
+
+.ciudad-input-contenedor > svg {
+  color: #8955c7;
+  flex-shrink: 0;
+}
+
+.ciudad-input-contenedor input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.ciudad-flecha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: #8955c7;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.ciudad-lista {
+  position: absolute;
+  z-index: 100;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #e8e0f1;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(45, 25, 70, 0.16);
+  overflow: hidden;
+}
+
+.ciudad-buscador {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 15px;
+  color: #8b7c9b;
+  font-size: 13px;
+  border-bottom: 1px solid #f0ebf5;
+}
+
+.ciudad-opciones {
+  max-height: 190px;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.ciudad-opcion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 12px;
+  border: none;
+  border-radius: 9px;
+  background: white;
+  color: #42364e;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ciudad-opcion:hover {
+  background: #f5effb;
+}
+
+.ciudad-opcion > svg:first-child {
+  color: #9870c4;
+}
+
+.ciudad-opcion span {
+  flex: 1;
+}
+
+.ciudad-opcion.seleccionada {
+  background: #f2eafa;
+  color: #7440a8;
+  font-weight: 600;
+}
+
+.ciudad-opcion.seleccionada > svg:last-child {
+  color: #7440a8;
+}
+
+.ciudad-sin-resultados {
+  padding: 12px;
+  color: #8b7c9b;
+  font-size: 13px;
+  text-align: center;
+}
+
+.ciudad-usar-texto {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-top: 1px solid #f0ebf5;
+  background: #faf7fd;
+  color: #7845ad;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ciudad-usar-texto:hover {
+  background: #f1e8fa;
+}

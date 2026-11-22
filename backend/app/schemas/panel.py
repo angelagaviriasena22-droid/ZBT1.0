@@ -98,3 +98,19 @@ class ReservaHotelOut(BaseModel):
     precio: Decimal
     estado: str
     habitaciones: list[str]
+
+
+class DestinoCrearPanel(BaseModel):
+    nombre: str = Field(min_length=1, max_length=150)
+    id_depto: int
+    foto_referencia: str | None = None
+    clima: str | None = None
+    generalidades: str | None = None
+
+
+class DestinoPanelOut(BaseModel):
+    id_destino: int
+    nombre: str
+    id_depto: int
+
+    model_config = ConfigDict(from_attributes=True)

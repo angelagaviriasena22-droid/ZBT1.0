@@ -1,3 +1,4 @@
+
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.sql import func
 from app.database.connection import Base
@@ -7,6 +8,13 @@ class SolicitudAdmin(Base):
     __tablename__ = "solicitud_admin"
 
     id_solicitud = Column(Integer, primary_key=True)
+
+    id_depto = Column(
+        Integer,
+        ForeignKey("deptos.id_depto"),
+        nullable=True
+    )
+
     nombre = Column(String(100), nullable=False)
     apellidos = Column(String(100))
     documento = Column(String(30), nullable=False)
@@ -20,7 +28,13 @@ class SolicitudAdmin(Base):
     categoria = Column(String(50), nullable=False)
     descripcion = Column(Text, nullable=False)
     politicas = Column(Text, nullable=False)
-    id_destino = Column(Integer, ForeignKey("destinos.id_destino"), nullable=True)
+
+    id_destino = Column(
+        Integer,
+        ForeignKey("destinos.id_destino"),
+        nullable=True
+    )
+
     estado = Column(String(12), nullable=False, default="pendiente")
     resuelta_por = Column(String, ForeignKey("usuario.id_usuario"), nullable=True)
     motivo_rechazo = Column(Text)

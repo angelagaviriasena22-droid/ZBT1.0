@@ -1,166 +1,128 @@
-.rs-fondo {
-    position: fixed;
-    inset: 0;
-    z-index: 1500;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 5vh 1rem;
-    overflow-y: auto;
-    background: rgba(6, 11, 103, 0.55);
+/* Fondo oscuro translúcido para el modal */
+.fixed.inset-0 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
 }
 
-.rs-caja {
-    position: relative;
-    width: 100%;
-    max-width: 560px;
-    padding: 1.6rem;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+/* Contenedor principal de la ventana emergente */
+.fixed.inset-0 > div {
+  background: #fffaf5;
+  border: 1px solid #ded8d0;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 100%;
+  padding: 1.8rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
 }
 
-.rs-caja h2 {
-    margin-right: 2rem;
-    color: var(--azul-oscuro);
-    font-size: 1.25rem;
+/* Botón de cerrar (X) */
+.fixed.inset-0 button.absolute {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  background: #e9e2db;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  color: #555;
+  transition: background 0.2s;
 }
 
-.rs-cerrar {
-    position: absolute;
-    top: 14px;
-    right: 16px;
-    background: none;
-    border: none;
-    color: #666;
-    font-size: 1.2rem;
-    cursor: pointer;
+.fixed.inset-0 button.absolute:hover {
+  background: #ded8d0;
+  color: #000;
 }
 
-.rs-resumen {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    margin: 1rem 0;
-    padding: 0.9rem 1rem;
-    background: var(--beige);
-    border-radius: 12px;
+/* Título del hotel */
+.fixed.inset-0 h3 {
+  color: var(--azul-medio, #1e3a8a);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
 }
 
-.rs-resumen strong {
-    color: var(--azul-oscuro);
-    font-size: 2rem;
+/* Sección de estadísticas y calificación promedio */
+.fixed.inset-0 .grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+  align-items: center;
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #e9e2db;
+  margin-bottom: 1.5rem;
 }
 
-.rs-resumen span {
-    margin-left: auto;
-    color: #555;
-    font-size: 0.88rem;
+/* Caja del formulario de reseñas */
+.fixed.inset-0 .bg-indigo-50\/40,
+.fixed.inset-0 form {
+  background: #ffffff;
+  padding: 1.2rem;
+  border-radius: 12px;
+  border: 1px solid #e9e2db;
+  margin-bottom: 1.5rem;
 }
 
-.rs-lista {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    max-height: 50vh;
-    overflow-y: auto;
+/* Textarea y selects del formulario */
+.fixed.inset-0 textarea,
+.fixed.inset-0 select {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #ded8d0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: #fffaf5;
+  outline: none;
+  font-family: inherit;
 }
 
-.rs-item {
-    padding: 0.9rem 1rem;
-    border: 1px solid #eee;
-    border-radius: 10px;
+.fixed.inset-0 textarea:focus,
+.fixed.inset-0 select:focus {
+  border-color: #f7a623;
+  box-shadow: 0 0 0 2px rgba(247, 166, 35, 0.2);
 }
 
-.rs-cabecera {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.3rem;
-    font-size: 0.9rem;
+/* Botón de publicar reseña */
+.fixed.inset-0 button[type="submit"] {
+  background: #f7a623;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 0.5rem;
 }
 
-.rs-cabecera span {
-    color: #888;
-    font-size: 0.8rem;
+.fixed.inset-0 button[type="submit"]:hover {
+  background: #e0921b;
 }
 
-.rs-item p {
-    margin-top: 0.4rem;
-    color: #444;
-    font-size: 0.9rem;
-    line-height: 1.45;
-}
-
-.rs-calificar {
-    margin: 0 0 1rem;
-    padding: 1rem;
-    background: #fffaf0;
-    border: 1px solid #f3d9a4;
-    border-radius: 12px;
-}
-
-.rs-calificar h3 {
-    margin-bottom: 0.5rem;
-    color: var(--azul-oscuro);
-    font-size: 1rem;
-}
-
-.rs-calificar p {
-    margin-bottom: 0.6rem;
-    color: #555;
-    font-size: 0.88rem;
-    line-height: 1.45;
-}
-
-.rs-calificar label {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    margin: 0.7rem 0;
-    color: var(--azul-oscuro);
-    font-size: 0.82rem;
-    font-weight: 600;
-}
-
-.rs-calificar select,
-.rs-calificar textarea {
-    padding: 0.5rem 0.7rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 0.9rem;
-}
-
-.rs-calificar textarea {
-    resize: vertical;
-}
-
-.rs-estrellas {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    margin: 0.7rem 0;
-    color: var(--azul-oscuro);
-    font-size: 0.82rem;
-    font-weight: 600;
-}
-
-.rs-estrellas b {
-    color: var(--rojo);
-}
-
-.rs-oblig {
-    color: var(--rojo);
-    font-size: 0.75rem;
-    font-weight: 700;
-}
-
-.rs-gracias {
-    margin-bottom: 1rem;
-    padding: 0.7rem;
-    background: #dff0d8;
-    border-radius: 8px;
-    color: var(--verde);
-    font-size: 0.9rem;
-    text-align: center;
+/* Lista de reseñas anteriores */
+.fixed.inset-0 .space-y-3 > div {
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #e9e2db;
+  margin-bottom: 0.8rem;
 }

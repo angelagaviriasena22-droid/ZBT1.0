@@ -15,7 +15,7 @@ class SolicitudCrear(BaseModel):
     categoria: str = Field(max_length=50)
     descripcion: str = Field(min_length=1)
     politicas: str = Field(min_length=1)
-    id_destino: int | None = None
+    id_destino: int
 
 
 class SolicitudRespuesta(BaseModel):

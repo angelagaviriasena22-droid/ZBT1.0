@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 
 from app.database.connection import get_db
 from app.schemas.feria import FeriaOut
-
 from app.services.feria_service import (
     listar_ferias,
     obtener_feria,
@@ -33,5 +32,8 @@ def obtener_ferias(
 
 
 @router.get("/{id_feria}", response_model=FeriaOut)
-def obtener_feria_endpoint(id_feria: int, db: Session = Depends(get_db)):
+def obtener_feria_endpoint(
+    id_feria: int,
+    db: Session = Depends(get_db)
+):
     return obtener_feria(db=db, id_feria=id_feria)

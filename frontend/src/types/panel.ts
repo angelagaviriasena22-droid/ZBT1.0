@@ -18,6 +18,7 @@ export interface Solicitud {
 }
 
 export interface HotelPanel {
+  politicas: string;
   id_hotel: number;
   id_destino: number;
   nombre: string;
@@ -58,4 +59,29 @@ export interface ReservaHotel {
   precio: number | string;
   estado: string;
   habitaciones: string[];
+}
+
+export interface HotelEditarForm {
+  nombre: string;
+  direccion: string;
+  contacto: string;
+  categoria: string;
+  descripcion: string;
+  politicas: string;
+  foto_referencia: string;
+  id_destino: number | null;
+}
+
+export interface DestinoCrearForm {
+  nombre: string;
+  id_depto: number;
+  foto_referencia?: string;
+  clima?: string;
+  generalidades?: string;
+}
+
+export interface DestinoPanelOut {
+  id_destino: number;
+  nombre: string;
+  id_depto: number;
 }

@@ -10,7 +10,17 @@ from app.schemas.usuario import (
 from app.services.usuario_service import autenticar, ingresar_con_google, registrar_usuario
 from app.utils.deps import usuario_actual
 from app.utils.security import crear_token, verify_password
-
+from app.schemas.usuario import (
+    LoginCodigoIn,
+    LoginInicioOut,
+)
+from app.services.usuario_service import (
+    autenticar,
+    ingresar_con_google,
+    registrar_usuario,
+    iniciar_verificacion,
+    verificar_codigo,
+)
 router = APIRouter(
     prefix="/usuarios",
     tags=["Usuarios"]
@@ -23,11 +33,42 @@ def registro(datos: UsuarioRegistro, db: Session = Depends(get_db)):
     return TokenOut(access_token=crear_token(usuario.id_usuario, usuario.rol), usuario=usuario)
 
 
-@router.post("/login", response_model=TokenOut)
+@router.post("/login", response_model=LoginInicioOut)
 def login(datos: UsuarioLogin, db: Session = Depends(get_db)):
     usuario = autenticar(db, datos.correo, datos.contrasena)
-    return TokenOut(access_token=crear_token(usuario.id_usuario, usuario.rol), usuario=usuario)
 
+    if usuario.rol == "super_admin":
+        return LoginInicioOut(
+            requiere_verificacion=False,
+            access_token=crear_token(usuario.id_usuario, usuario.rol),
+            usuario=usuario,
+        )
+
+    if usuario.rol not in ("usuario", "admin_hotel"):
+        raise HTTPException(403, "Rol no autorizado para iniciar sesión")
+
+    id_verificacion = iniciar_verificacion(db, usuario)
+
+    return LoginInicioOut(
+        requiere_verificacion=True,
+        mensaje="Enviamos un código de verificación a tu correo.",
+        id_verificacion=id_verificacion,
+    )
+@router.post("/verificar-codigo", response_model=TokenOut)
+def confirmar_codigo(
+    datos: LoginCodigoIn,
+    db: Session = Depends(get_db),
+):
+    usuario = verificar_codigo(
+        db,
+        datos.id_verificacion,
+        datos.codigo,
+    )
+
+    return TokenOut(
+        access_token=crear_token(usuario.id_usuario, usuario.rol),
+        usuario=usuario,
+    )
 
 @router.post("/google", response_model=TokenOut)
 def login_google(datos: GoogleLogin, db: Session = Depends(get_db)):

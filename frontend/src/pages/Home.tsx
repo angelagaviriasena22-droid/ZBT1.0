@@ -1,10 +1,11 @@
+
 import { useEffect, useState } from "react";
 
 import DepartamentoCard from "../components/DepartamentoCard";
-import { ResenasRecientes } from "../components/ResenasRecientes";;
 import { deptoService } from "../services/deptoService";
 import type { Depto } from "../types/depto";
 import "./Home.css";
+import { Plane } from "lucide-react";
 
 function Home() {
   const [deptos, setDeptos] = useState<Depto[]>([]);
@@ -24,7 +25,7 @@ function Home() {
       <section className="hero">
         <h1>Conecta con nuevos lugares</h1>
         <p>
-          ✈️ Bienvenidos a Zafiro Bloom Tours. Descubre destinos increíbles y vive experiencias
+          <Plane size={22} /> Bienvenidos a Zafiro Bloom Tours. Descubre destinos increíbles y vive experiencias
           inolvidables. Encuentra los mejores paquetes turísticos para disfrutar tus vacaciones
           con comodidad, seguridad y los mejores precios.
         </p>
@@ -40,8 +41,6 @@ function Home() {
           ))}
         </div>
       </section>
-
-      <ResenasRecientes />
     </>
   );
 }

@@ -6,6 +6,7 @@ import logo from "../assets/logo.png";
 import { useAuth } from "../context/AuthContext";
 import ModalFerias, { type ModoModal } from "./ModalFerias";
 import "./Navbar.css";
+import { CalendarDays, Zap, Leaf, Search } from "lucide-react";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -39,21 +40,24 @@ function Navbar() {
                 className="navbar-boton navbar-boton-ferias"
                 onClick={() => setModal("feria")}
               >
-                📅 Ferias y Fiestas del Mes
+                <CalendarDays size={18} />
+                 Ferias y Fiestas del Mes
               </button>
 
               <button
                 className="navbar-boton navbar-boton-ofertas"
                 onClick={() => setModal("oferta")}
               >
-                ⚡ Ofertas Relámpago
+                <Zap size={18} />
+                Ofertas Relámpago
               </button>
 
               <button
                 className="navbar-boton navbar-boton-parte"
                 onClick={() => navigate("/haz-parte")}
               >
-                🌿 Haz parte de Zafiro Bloom Tours
+                <Leaf size={18} />
+                Haz parte de Zafiro Bloom Tours
               </button>
             </div>
           )}
@@ -114,7 +118,9 @@ function Navbar() {
         {enInicio && (
           <form className="buscador-contenedor" onSubmit={buscar}>
             <div className="buscador">
-              <span>🔍</span>
+              <span className="icono-buscador">
+                <Search size={20} color="#060B67" />
+              </span>
 
               <input
                 type="text"

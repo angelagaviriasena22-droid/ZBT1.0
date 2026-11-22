@@ -1,61 +1,65 @@
 import type { Hotel } from "../types/hotel";
-import { moneda } from "../utils/formato";
-import { urlImagen } from "../utils/imagen";
-import Estrellas from "./Estrellas";
 import "./TarjetaHotel.css";
+import { MapPin } from "lucide-react";
 
-interface Props {
+interface TarjetaHotelProps {
   hotel: Hotel;
   onElegir: (hotel: Hotel) => void;
   onVerResenas: (hotel: Hotel) => void;
 }
 
-function TarjetaHotel({ hotel, onElegir, onVerResenas }: Props) {
-  const ocupacion = Number(hotel.porcentaje_ocupacion);
-  const promedio = Number(hotel.calificacion_promedio);
-  const total = hotel.total_resenas;
+export default function TarjetaHotel({ hotel, onElegir, onVerResenas }: TarjetaHotelProps) {
+  const h = hotel as any;
+
+  // Usamos exactamente 'foto_referencia' que es el nombre del campo en tu base de datos
+  const imagenHotel = h.foto_referencia || h.imagen || h.foto;
 
   return (
-    <article className="tarjeta-hotel">
-      {hotel.foto_referencia ? (
-        <img src={urlImagen(hotel.foto_referencia)} alt={hotel.nombre} />
+    <div className="tarjeta-hotel">
+      {imagenHotel ? (
+        <img src={imagenHotel} alt={h.nombre} />
       ) : (
         <div className="tarjeta-hotel-sinfoto">Sin imagen</div>
       )}
 
       <div className="tarjeta-hotel-cuerpo">
-        <h3>{hotel.nombre}</h3>
+        <h3>{h.nombre}</h3>
+        
+        {h.direccion && (
+          <p className="tarjeta-hotel-dir">
+            <MapPin size={16} /> {h.direccion}
+          </p>
+        )}
 
-        <div className="tarjeta-hotel-calif">
-          <Estrellas valor={promedio} />
-          <span>
-            {total > 0
-              ? `${promedio.toFixed(1)} (${total} ${total === 1 ? "reseña" : "reseñas"})`
-              : "Sin reseñas todavía"}
-          </span>
+        <p className="tarjeta-hotel-desc">{h.descripcion}</p>
+
+        <div style={{ display: "flex", gap: "0.5rem", marginTop: "auto", alignItems: "center" }}>
+          <button
+            type="button"
+            onClick={() => onElegir(hotel)}
+            style={{
+              padding: "0.4rem 0.9rem",
+              background: "#2788d8",
+              border: "1px solid #2788d8",
+              borderRadius: "6px",
+              color: "white",
+              fontSize: "0.82rem",
+              fontWeight: "600",
+              cursor: "pointer"
+            }}
+          >
+            Ver habitaciones
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onVerResenas(hotel)}
+            className="tarjeta-hotel-resenas"
+          >
+            ⭐ Ver reseñas y calificar
+          </button>
         </div>
-        <button type="button" className="tarjeta-hotel-resenas" onClick={() => onVerResenas(hotel)}>
-          ⭐ Ver reseñas y calificar
-        </button>
-
-        {hotel.direccion && <p className="tarjeta-hotel-dir">📍 {hotel.direccion}</p>}
-        {hotel.descripcion && <p className="tarjeta-hotel-desc">{hotel.descripcion}</p>}
-
-        <div className="tarjeta-hotel-datos">
-          <span>Precio promedio</span>
-          <strong>{moneda(hotel.precio_promedio)}</strong>
-        </div>
-        <div className="tarjeta-hotel-datos tarjeta-hotel-ocupacion">
-          <span>Ocupación</span>
-          <strong>{ocupacion}%</strong>
-        </div>
-
-        <button className="boton" type="button" onClick={() => onElegir(hotel)}>
-          Ver habitaciones
-        </button>
       </div>
-    </article>
+    </div>
   );
 }
-
-export default TarjetaHotel;

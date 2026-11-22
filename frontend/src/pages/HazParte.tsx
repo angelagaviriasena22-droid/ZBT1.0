@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import "./HazParte.css";
+import { Leaf, Hotel, Zap } from "lucide-react";
 
 function HazParte() {
   const navigate = useNavigate();
@@ -8,7 +9,9 @@ function HazParte() {
   return (
     <div className="haz-parte">
       <header className="haz-parte-encabezado">
-        <h1>Haz parte de Zafiro Bloom Tours 🌿</h1>
+        <h1>
+          Haz parte de Zafiro Bloom Tours <Leaf size={24} />
+        </h1>
         <p>
           Nuestra plataforma nace con un propósito claro: impulsar la economía local y dar
           visibilidad a los pueblos mágicos de nuestra región. Conectamos a viajeros apasionados con
@@ -18,7 +21,9 @@ function HazParte() {
 
       <section className="haz-parte-roles">
         <article className="haz-parte-rol">
-          <h3 className="rol-admin">🏨 Administrador (dueño de hotel)</h3>
+          <h3 className="rol-admin">
+            <Hotel size={20} /> Administrador (dueño de hotel)
+          </h3>
           <p>
             ¿Tienes un hotel o alojamiento en un pueblo? Únete para gestionar tu propio hospedaje,
             agregar tus habitaciones, actualizar tarifas y registrar nuevos destinos si aún no
@@ -26,7 +31,9 @@ function HazParte() {
           </p>
         </article>
         <article className="haz-parte-rol">
-          <h3 className="rol-super">⚡ Super administrador</h3>
+          <h3 className="rol-super">
+            <Zap size={20} /> Super administrador
+          </h3>
           <p>
             Encargado de validar y aprobar las solicitudes de los nuevos administradores,
             asegurando la calidad y autenticidad de la oferta turística en cada municipio.

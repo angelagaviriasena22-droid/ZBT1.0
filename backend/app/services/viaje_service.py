@@ -118,8 +118,10 @@ def crear_viaje(db: Session, usuario: Usuario, datos: ViajeCrear) -> ViajeOut:
     db.add(viaje)
     try:
         db.commit()  # la base rechaza cruces de fechas aunque dos personas reserven a la vez
-    except IntegrityError:
+    except IntegrityError as e:
         db.rollback()
+        print("--- ERROR REAL DE POSTGRES ---")
+        print(e.orig)  # <--- Esto nos dirá la verdad exacta en la terminal
         raise HTTPException(409, "Alguna de las habitaciones ya fue reservada en esas fechas")
     db.refresh(viaje)
     return _a_salida(viaje)

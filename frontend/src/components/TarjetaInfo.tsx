@@ -1,9 +1,11 @@
+import type { ReactNode } from "react";
+import { Phone } from "lucide-react";
 import type { Informacion } from "../types/informacion";
 import "./TarjetaInfo.css";
 
 interface Props {
   titulo: string;
-  icono: string;
+  icono: ReactNode;
   color: string;
   items: Informacion[];
 }
@@ -18,7 +20,11 @@ function TarjetaInfo({ titulo, icono, color, items }: Props) {
         {items.map((item, i) => (
           <div key={i}>
             <p>{item.descripcion}</p>
-            {item.contacto && <p className="tarjeta-info-contacto">📞 Contacto: {item.contacto}</p>}
+            {item.contacto && (
+            <p className="tarjeta-info-contacto">
+              <Phone size={16} /> Contacto: {item.contacto}
+            </p>
+            )}
           </div>
         ))}
       </div>

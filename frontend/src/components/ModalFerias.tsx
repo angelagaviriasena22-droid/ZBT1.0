@@ -8,6 +8,7 @@ import { urlImagen } from "../utils/imagen";
 import "./ModalFerias.css";
 
 export type ModoModal = "feria" | "oferta" | "busqueda";
+import { X, MapPin, CalendarDays } from "lucide-react";
 
 interface Props {
   modo: ModoModal;
@@ -71,7 +72,9 @@ function ModalFerias({ modo, termino, onCerrar }: Props) {
             {TITULOS[modo]}
             {modo === "busqueda" && termino ? `: "${termino}"` : ""}
           </h2>
-          <button className="modal-cerrar" onClick={onCerrar} aria-label="Cerrar">✕</button>
+          <button className="modal-cerrar" onClick={onCerrar} aria-label="Cerrar">
+           <X size={20} />
+          </button>
         </div>
 
         <div className="modal-cuerpo">
@@ -99,13 +102,14 @@ function ModalFerias({ modo, termino, onCerrar }: Props) {
                     </div>
                     {(f.nombre_destino || f.nombre_depto) && (
                       <p className="modal-ubicacion">
-                        📍 {[f.nombre_destino, f.nombre_depto].filter(Boolean).join(", ")}
+                        <MapPin size={16} />
+                        {[f.nombre_destino, f.nombre_depto].filter(Boolean).join(", ")}
                       </p>
                     )}
                     {f.descripcion && <p>{f.descripcion}</p>}
                     {(f.fecha_inicio || f.fecha_fin) && (
                       <p className="modal-fechas">
-                        🗓️ {fecha(f.fecha_inicio) ?? "Por confirmar"}
+                        <CalendarDays size={16} /> {fecha(f.fecha_inicio) ?? "Por confirmar"}
                         {f.fecha_fin ? ` – ${fecha(f.fecha_fin)}` : ""}
                       </p>
                     )}
