@@ -18,6 +18,11 @@ def hash_password(password: str) -> str:
     return bcrypt.hashpw(pwd_bytes, salt).decode("utf-8")
 
 
+def get_password_hash(password: str) -> str:
+    """Alias para compatibilidad con el restablecimiento de contraseña"""
+    return hash_password(password)
+
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     try:
         return bcrypt.checkpw(

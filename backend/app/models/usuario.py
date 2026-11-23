@@ -31,3 +31,7 @@ class Usuario(Base):
     google_id = Column(String, unique=True, nullable=True)
     activo = Column(Boolean, nullable=False, default=True)
     fecha_registro = Column(DateTime, server_default=func.now())
+
+    # Columnas para recuperación de contraseña
+    reset_code = Column(String(6), nullable=True)
+    reset_expires = Column(DateTime, nullable=True)

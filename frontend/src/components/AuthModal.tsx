@@ -1,7 +1,6 @@
-
 import { useState, type FormEvent } from "react";
-
 import { useAuth } from "../context/AuthContext";
+import { solicitarRecuperacion, restablecerContrasena } from "../services/authService";
 import { mensajeError } from "../utils/errores";
 import BotonGoogle from "./BotonGoogle";
 import "./AuthModal.css";
@@ -36,12 +35,10 @@ const CIUDADES = [
 
 function validar(campo: Campo, valor: string, registro: boolean): string {
   const v = valor.trim();
-
   if (!v) return "*Obligatorio";
   if (campo === "correo" && !/^\S+@\S+\.\S+$/.test(v)) return "*Correo no válido";
   if (campo === "telefono" && !/^[0-9]{7,20}$/.test(v)) return "*Teléfono no válido";
   if (campo === "contrasena" && registro && valor.length < 8) return "*Mínimo 8 caracteres";
-
   return "";
 }
 
@@ -166,7 +163,7 @@ function Entrada({
   );
 }
 
-function AuthModal() {
+export default function AuthModal() {
   const {
     modalAbierto,
     cerrarAuth,
@@ -178,6 +175,15 @@ function AuthModal() {
 
   const [registro, setRegistro] = useState(false);
   const [requiereCodigo, setRequiereCodigo] = useState(false);
+  
+  // Estados para recuperación de contraseña
+  const [olvidoContrasena, setOlvidoContrasena] = useState(false);
+  const [pasoRecuperacion, setPasoRecuperacion] = useState<"correo" | "restablecer">("correo");
+  const [correoRecuperacion, setCorreoRecuperacion] = useState("");
+  const [codigoRecuperacion, setCodigoRecuperacion] = useState("");
+  const [nuevaContrasena, setNuevaContrasena] = useState("");
+  const [mensajeExito, setMensajeExito] = useState("");
+  
   const [idVerificacion, setIdVerificacion] = useState("");
   const [codigo, setCodigo] = useState("");
   const [form, setForm] = useState(VACIO);
@@ -195,6 +201,12 @@ function AuthModal() {
     setError("");
     setRegistro(false);
     setRequiereCodigo(false);
+    setOlvidoContrasena(false);
+    setPasoRecuperacion("correo");
+    setCorreoRecuperacion("");
+    setCodigoRecuperacion("");
+    setNuevaContrasena("");
+    setMensajeExito("");
     setIdVerificacion("");
     setCodigo("");
   }
@@ -213,6 +225,68 @@ function AuthModal() {
   function cerrar() {
     limpiarTodo();
     cerrarAuth();
+  }
+
+  // Paso 1: Enviar código al correo
+  async function enviarCorreoRecuperacion(e: FormEvent) {
+    e.preventDefault();
+    setError("");
+    setMensajeExito("");
+
+    if (!correoRecuperacion || !/^\S+@\S+\.\S+$/.test(correoRecuperacion)) {
+      setError("Ingresa un correo electrónico válido.");
+      return;
+    }
+
+    setEnviando(true);
+    try {
+      await solicitarRecuperacion(correoRecuperacion.trim());
+      setMensajeExito("¡Código enviado! Revisa tu bandeja de entrada.");
+      setPasoRecuperacion("restablecer");
+    } catch (err) {
+      setError(mensajeError(err, "No se pudo enviar el correo de recuperación."));
+    } finally {
+      setEnviando(false);
+    }
+  }
+
+  // Paso 2: Validar código y guardar nueva contraseña
+  async function confirmarNuevaContrasena(e: FormEvent) {
+    e.preventDefault();
+    setError("");
+    setMensajeExito("");
+
+    if (!/^[0-9]{6}$/.test(codigoRecuperacion)) {
+      setError("Ingresa los 6 dígitos del código.");
+      return;
+    }
+
+    if (nuevaContrasena.length < 8) {
+      setError("La nueva contraseña debe tener al menos 8 caracteres.");
+      return;
+    }
+
+    setEnviando(true);
+    try {
+      await restablecerContrasena(
+        correoRecuperacion.trim(),
+        codigoRecuperacion,
+        nuevaContrasena
+      );
+      setMensajeExito("¡Contraseña actualizada con éxito! Ya puedes iniciar sesión.");
+      setTimeout(() => {
+        setOlvidoContrasena(false);
+        setPasoRecuperacion("correo");
+        setCorreoRecuperacion("");
+        setCodigoRecuperacion("");
+        setNuevaContrasena("");
+        setMensajeExito("");
+      }, 2000);
+    } catch (err) {
+      setError(mensajeError(err, "El código es incorrecto o ha expirado."));
+    } finally {
+      setEnviando(false);
+    }
   }
 
   async function enviar(e: FormEvent) {
@@ -328,103 +402,221 @@ function AuthModal() {
         </button>
 
         <h2>
-          {requiereCodigo
-            ? "Verifica tu correo"
-            : registro
-              ? "Crear una cuenta"
-              : "Iniciar sesión"}
+          {olvidoContrasena
+            ? pasoRecuperacion === "correo"
+              ? "Recuperar contraseña"
+              : "Nueva contraseña"
+            : requiereCodigo
+              ? "Verifica tu correo"
+              : registro
+                ? "Crear una cuenta"
+                : "Iniciar sesión"}
         </h2>
 
         <p className="auth-sub">
-          {requiereCodigo
-            ? `Te enviamos un código de seis dígitos a ${form.correo}.`
-            : registro
-              ? "Completa todos los datos para registrarte y empezar tu viaje"
-              : "Inicia sesión para continuar con tu reserva"}
+          {olvidoContrasena
+            ? pasoRecuperacion === "correo"
+              ? "Ingresa tu correo electrónico registrado para enviarte un código de recuperación."
+              : `Ingresa el código de 6 dígitos enviado a ${correoRecuperacion} y crea tu nueva contraseña.`
+            : requiereCodigo
+              ? `Te enviamos un código de seis dígitos a ${form.correo}.`
+              : registro
+                ? "Completa todos los datos para registrarte y empezar tu viaje"
+                : "Inicia sesión para continuar con tu reserva"}
         </p>
 
-        <form onSubmit={enviar} className="auth-form" noValidate>
-          {registro && !requiereCodigo && (
-            <>
-              <div className="auth-fila">
-                <Entrada etiqueta="Nombre" nombre="nombre" valor={form.nombre}
-                  error={e("nombre")} autoComplete="given-name" onCambio={cambiar} />
-                <Entrada etiqueta="Apellidos" nombre="apellidos" valor={form.apellidos}
-                  error={e("apellidos")} autoComplete="family-name" onCambio={cambiar} />
-              </div>
+        {olvidoContrasena ? (
+          pasoRecuperacion === "correo" ? (
+            <form onSubmit={enviarCorreoRecuperacion} className="auth-form" noValidate>
+              <label className="auth-campo">
+                <span className="auth-etiqueta">Correo electrónico <b>*</b></span>
+                <input
+                  type="email"
+                  value={correoRecuperacion}
+                  placeholder="correo@ejemplo.com"
+                  onChange={(e) => {
+                    setCorreoRecuperacion(e.target.value);
+                    setError("");
+                    setMensajeExito("");
+                  }}
+                  autoFocus
+                />
+              </label>
 
-              <Entrada etiqueta="Ciudad" nombre="ciudad" valor={form.ciudad}
-                error={e("ciudad")} autoComplete="address-level2" onCambio={cambiar} />
+              {error && <p className="auth-error">{error}</p>}
+              {mensajeExito && <p style={{ color: "green", fontSize: "14px", textAlign: "center" }}>{mensajeExito}</p>}
 
-              <div className="auth-fila">
-                <Entrada etiqueta="Dirección" nombre="direccion" valor={form.direccion}
-                  error={e("direccion")} autoComplete="street-address" onCambio={cambiar} />
-                <Entrada etiqueta="Teléfono" nombre="telefono" tipo="tel"
-                  valor={form.telefono} error={e("telefono")}
-                  autoComplete="tel" onCambio={cambiar} />
-              </div>
-            </>
-          )}
+              <button className="boton auth-enviar" type="submit" disabled={enviando}>
+                {enviando ? "Enviando..." : "Enviar código al correo"}
+              </button>
 
-          {!requiereCodigo ? (
-            <>
-              <Entrada
-                etiqueta="Correo electrónico"
-                nombre="correo"
-                tipo="email"
-                valor={form.correo}
-                error={e("correo")}
-                autoComplete="email"
-                onCambio={cambiar}
-              />
-
-              <Entrada
-                etiqueta="Contraseña"
-                nombre="contrasena"
-                tipo="password"
-                valor={form.contrasena}
-                error={e("contrasena")}
-                autoComplete={registro ? "new-password" : "current-password"}
-                onCambio={cambiar}
-              />
-            </>
-          ) : (
-            <label className="auth-campo">
-              <span className="auth-etiqueta">Código de verificación *</span>
-              <input
-                type="text"
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                maxLength={6}
-                placeholder="Ingresa los 6 dígitos"
-                value={codigo}
-                onChange={(e) => {
-                  setCodigo(e.target.value.replace(/\D/g, "").slice(0, 6));
+              <button
+                className="auth-cambio"
+                type="button"
+                onClick={() => {
+                  setOlvidoContrasena(false);
+                  setPasoRecuperacion("correo");
                   setError("");
+                  setMensajeExito("");
                 }}
-                autoFocus
-              />
-            </label>
-          )}
+              >
+                Volver al inicio de sesión
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={confirmarNuevaContrasena} className="auth-form" noValidate>
+              <label className="auth-campo">
+                <span className="auth-etiqueta">Código de 6 dígitos <b>*</b></span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  value={codigoRecuperacion}
+                  placeholder="Ingresa los 6 dígitos"
+                  onChange={(e) => {
+                    setCodigoRecuperacion(e.target.value.replace(/\D/g, "").slice(0, 6));
+                    setError("");
+                  }}
+                  autoFocus
+                />
+              </label>
 
-          {error && <p className="auth-error">{error}</p>}
+              <label className="auth-campo">
+                <span className="auth-etiqueta">Nueva contraseña <b>*</b></span>
+                <input
+                  type="password"
+                  value={nuevaContrasena}
+                  placeholder="Mínimo 8 caracteres"
+                  autoComplete="new-password"
+                  onChange={(e) => {
+                    setNuevaContrasena(e.target.value);
+                    setError("");
+                  }}
+                />
+              </label>
 
-          <button
-            className="boton auth-enviar"
-            type="submit"
-            disabled={enviando}
-          >
-            {enviando
-              ? "Verificando..."
-              : requiereCodigo
-                ? "Verificar código"
-                : registro
-                  ? "Registrarse"
-                  : "Iniciar sesión"}
-          </button>
-        </form>
+              {error && <p className="auth-error">{error}</p>}
+              {mensajeExito && <p style={{ color: "green", fontSize: "14px", textAlign: "center" }}>{mensajeExito}</p>}
 
-        {!requiereCodigo && (
+              <button className="boton auth-enviar" type="submit" disabled={enviando}>
+                {enviando ? "Guardando..." : "Guardar nueva contraseña"}
+              </button>
+
+              <button
+                className="auth-cambio"
+                type="button"
+                onClick={() => {
+                  setPasoRecuperacion("correo");
+                  setCodigoRecuperacion("");
+                  setNuevaContrasena("");
+                  setError("");
+                  setMensajeExito("");
+                }}
+              >
+                Volver a ingresar correo
+              </button>
+            </form>
+          )
+        ) : (
+          <form onSubmit={enviar} className="auth-form" noValidate>
+            {registro && !requiereCodigo && (
+              <>
+                <div className="auth-fila">
+                  <Entrada etiqueta="Nombre" nombre="nombre" valor={form.nombre}
+                    error={e("nombre")} autoComplete="given-name" onCambio={cambiar} />
+                  <Entrada etiqueta="Apellidos" nombre="apellidos" valor={form.apellidos}
+                    error={e("apellidos")} autoComplete="family-name" onCambio={cambiar} />
+                </div>
+
+                <Entrada etiqueta="Ciudad" nombre="ciudad" valor={form.ciudad}
+                  error={e("ciudad")} autoComplete="address-level2" onCambio={cambiar} />
+
+                <div className="auth-fila">
+                  <Entrada etiqueta="Dirección" nombre="direccion" valor={form.direccion}
+                    error={e("direccion")} autoComplete="street-address" onCambio={cambiar} />
+                  <Entrada etiqueta="Teléfono" nombre="telefono" tipo="tel"
+                    valor={form.telefono} error={e("telefono")}
+                    autoComplete="tel" onCambio={cambiar} />
+                </div>
+              </>
+            )}
+
+            {!requiereCodigo ? (
+              <>
+                <Entrada
+                  etiqueta="Correo electrónico"
+                  nombre="correo"
+                  tipo="email"
+                  valor={form.correo}
+                  error={e("correo")}
+                  autoComplete="email"
+                  onCambio={cambiar}
+                />
+
+                <Entrada
+                  etiqueta="Contraseña"
+                  nombre="contrasena"
+                  tipo="password"
+                  valor={form.contrasena}
+                  error={e("contrasena")}
+                  autoComplete={registro ? "new-password" : "current-password"}
+                  onCambio={cambiar}
+                />
+
+                {!registro && (
+                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '-5px', marginBottom: '10px' }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOlvidoContrasena(true);
+                        setPasoRecuperacion("correo");
+                        setError("");
+                      }}
+                      style={{ fontSize: '13px', color: '#0066cc', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
+                    >
+                      ¿Olvidaste tu contraseña?
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <label className="auth-campo">
+                <span className="auth-etiqueta">Código de verificación *</span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={6}
+                  placeholder="Ingresa los 6 dígitos"
+                  value={codigo}
+                  onChange={(e) => {
+                    setCodigo(e.target.value.replace(/\D/g, "").slice(0, 6));
+                    setError("");
+                  }}
+                  autoFocus
+                />
+              </label>
+            )}
+
+            {error && <p className="auth-error">{error}</p>}
+
+            <button
+              className="boton auth-enviar"
+              type="submit"
+              disabled={enviando}
+            >
+              {enviando
+                ? "Verificando..."
+                : requiereCodigo
+                  ? "Verificar código"
+                  : registro
+                    ? "Registrarse"
+                    : "Iniciar sesión"}
+            </button>
+          </form>
+        )}
+
+        {!requiereCodigo && !olvidoContrasena && (
           <>
             <BotonGoogle
               modo={registro ? "registro" : "ingresar"}
@@ -467,5 +659,3 @@ function AuthModal() {
     </div>
   );
 }
-
-export default AuthModal;

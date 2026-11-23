@@ -1,4 +1,5 @@
 import "./Estrellas.css";
+import { Star } from "lucide-react";
 
 interface Props {
   valor: number;
@@ -20,10 +21,12 @@ function Estrellas({ valor, onCambio, tamano = "normal" }: Props) {
             onClick={() => onCambio(n)}
             aria-label={`${n} ${n === 1 ? "estrella" : "estrellas"}`}
           >
-            ★
+            <Star />
           </button>
         ) : (
-          <span key={n} className={n <= redondeado ? "on" : ""}>★</span>
+          <span key={n} className={n <= redondeado ? "on" : ""}>
+            <Star />
+          </span>
         )
       )}
     </span>
