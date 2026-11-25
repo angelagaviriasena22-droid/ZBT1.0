@@ -6,3 +6,6 @@ __pycache__/
 
 frontend.zip
 backend.zip
+
+/frontend.zip
+/backend.zip
