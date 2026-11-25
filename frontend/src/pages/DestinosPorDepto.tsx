@@ -6,7 +6,6 @@ import { deptoService } from "../services/deptoService";
 import { destinoService } from "../services/destinoService";
 import type { Depto } from "../types/depto";
 import type { Destino } from "../types/destino";
-import { urlImagen } from "../utils/imagen";
 import "./DestinosPorDepto.css";
 
 function DestinosPorDepto() {
@@ -35,7 +34,7 @@ function DestinosPorDepto() {
     <>
       <div
         className="depto-banner"
-        style={{ backgroundImage: `url("${urlImagen(depto.foto_referencia)}")` }}
+        style={{ backgroundImage: `url(${depto.foto_referencia || ""})` }}
       >
         <h1>{depto.nombre}</h1>
       </div>

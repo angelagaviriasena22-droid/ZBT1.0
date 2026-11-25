@@ -8,7 +8,6 @@ import { gastronomiaService } from "../services/gastronomiaService";
 import { transporteService } from "../services/transporteService";
 import type { Destino } from "../types/destino";
 import type { Informacion } from "../types/informacion";
-import { urlImagen } from "../utils/imagen";
 import "./DetalleDestino.css";
 
 function DetalleDestino() {
@@ -24,7 +23,10 @@ function DetalleDestino() {
 
   useEffect(() => {
     if (!idDestino) return;
+
     setCargando(true);
+    setError("");
+
     Promise.all([
       destinoService.obtener(idDestino),
       gastronomiaService.listar(idDestino),
@@ -41,16 +43,29 @@ function DetalleDestino() {
       .finally(() => setCargando(false));
   }, [idDestino]);
 
-  if (cargando) return <p className="mensaje-carga">Cargando...</p>;
-  if (error || !destino) return <p className="mensaje-error">{error || "Destino no encontrado"}</p>;
+  if (cargando) {
+    return <p className="mensaje-carga">Cargando...</p>;
+  }
+
+  if (error || !destino) {
+    return (
+      <p className="mensaje-error">
+        {error || "Destino no encontrado"}
+      </p>
+    );
+  }
 
   return (
     <>
       <div
         className="destino-banner"
-        style={{ backgroundImage: `url("${urlImagen(destino.foto_referencia)}")` }}
+        style={{
+          backgroundImage: `url("${encodeURI(destino.foto_referencia || "")}")`,
+        }}
       >
-        <h1>{destino.nombre}</h1>
+        <div className="destino-banner-contenido">
+          <h1>{destino.nombre}</h1>
+        </div>
       </div>
 
       <section className="destino-info">
@@ -59,7 +74,12 @@ function DetalleDestino() {
             <strong>Clima:</strong> {destino.clima}
           </p>
         )}
-        {destino.generalidades && <p className="destino-generalidades">{destino.generalidades}</p>}
+
+        {destino.generalidades && (
+          <p className="destino-generalidades">
+            {destino.generalidades}
+          </p>
+        )}
       </section>
 
       <div className="destino-acciones">
@@ -72,9 +92,42 @@ function DetalleDestino() {
         </button>
       </div>
 
-      <CarruselSeccion titulo="Gastronomía típica" items={gastronomia} />
-      <CarruselSeccion titulo="Actividades" items={actividades} />
-      <CarruselSeccion titulo="Transporte" items={transporte} />
+      <CarruselSeccion
+        titulo="Gastronomía típica"
+        items={gastronomia}
+        carpetaImagen="gastronomia"
+      />
+
+      <CarruselSeccion
+        titulo="Actividades"
+        items={actividades}
+        carpetaImagen="actividades"
+      />
+
+      {/* Sección de Transporte en formato de Tarjetas */}
+      <section className="destino-info">
+        <h2>Transporte</h2>
+        <div className="transporte-grid">
+          {transporte && transporte.length > 0 ? (
+            transporte.map((item, i) => (
+              <div key={i} className="transporte-card">
+                <p className="transporte-descripcion">{item.descripcion}</p>
+                {item.contacto && (
+                  <span className="transporte-contacto">
+                    Contacto: {item.contacto}
+                  </span>
+                )}
+              </div>
+            ))
+          ) : (
+            <div className="transporte-card">
+              <p className="transporte-descripcion">
+                Servicio de transporte intermunicipal y rutas locales disponibles para acceder al destino.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
     </>
   );
 }

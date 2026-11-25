@@ -1,17 +1,25 @@
 import { useState, type FormEvent } from "react";
-
 import { resenaService } from "../services/resenaService";
 import type { Viaje } from "../types/viaje";
 import { mensajeError } from "../utils/errores";
 import Estrellas from "./Estrellas";
 import "./ModalResena.css";
-import { X, Hotel } from "lucide-react";
+import { X, Hotel, Sparkles } from "lucide-react";
 
 interface Props {
   viaje: Viaje;
   onCerrar: () => void;
   onGuardada: (idVp: number) => void;
 }
+
+// Textos dinámicos según el nivel de satisfacción
+const etiquetasCalificacion: Record<number, { texto: string; badge: string; clase: string }> = {
+  1: { texto: "Deficiente", badge: "2,0", clase: "cal-malo" },
+  2: { texto: "Regular", badge: "5,0", clase: "cal-regular" },
+  3: { texto: "Bueno", badge: "7,0", clase: "cal-bueno" },
+  4: { texto: "Muy bien", badge: "8,5", clase: "cal-muy-bien" },
+  5: { texto: "¡Excelente!", badge: "9,8", clase: "cal-excelente" },
+};
 
 function ModalResena({ viaje, onCerrar, onGuardada }: Props) {
   const [calificacion, setCalificacion] = useState(0);
@@ -41,25 +49,50 @@ function ModalResena({ viaje, onCerrar, onGuardada }: Props) {
     }
   }
 
+  const infoActual = calificacionesDesc(calificacion);
+
+  function calificacionesDesc(val: number) {
+    return etiquetasCalificacion[val] || { texto: "Selecciona una puntuación", badge: "--", clase: "" };
+  }
+
   return (
-    <div className="res-fondo">
-      <div className="res-caja">
+    <div className="res-fondo" onClick={onCerrar}>
+      <div className="res-caja" onClick={(e) => e.stopPropagation()}>
         <button className="res-cerrar" type="button" onClick={onCerrar} aria-label="Cerrar">
           <X size={20} />
         </button>
+        
         <h2>Califica tu estancia</h2>
         <p className="res-sub">
-          <Hotel size={16} /> {viaje.nombre_hotel} · {viaje.nombre_destino}</p>
+          <Hotel size={16} /> {viaje.nombre_hotel} · {viaje.nombre_destino}
+        </p>
+
+        {/* Tarjeta de vista previa de calificación estilo Booking */}
+        {calificacion > 0 && (
+          <div className="res-badge-preview">
+            <div className="res-preview-text">
+              <span>Tu valoración</span>
+              <strong>{infoActual.texto}</strong>
+            </div>
+            <div className="res-preview-badge">{infoActual.badge}</div>
+          </div>
+        )}
 
         <form onSubmit={enviar} noValidate>
           <div className="res-campo">
             <span className="res-etiqueta">Tu calificación <b>*</b></span>
-            {intentado && calificacion === 0 && <span className="res-obligatorio">*Obligatorio: elige de 1 a 5 estrellas</span>}
-            <Estrellas valor={calificacion} onCambio={setCalificacion} tamano="grande" />
+            {intentado && calificacion === 0 && (
+              <span className="res-obligatorio">* Obligatorio: elige de 1 a 5 estrellas</span>
+            )}
+            <div className="res-estrellas-wrapper">
+              <Estrellas valor={calificacion} onCambio={setCalificacion} tamano="grande" />
+            </div>
           </div>
 
           <label className="res-campo">
-            <span className="res-etiqueta">Cuéntanos tu experiencia (opcional)</span>
+            <span className="res-etiqueta">
+              <Sparkles size={14} /> Cuéntanos tu experiencia (opcional)
+            </span>
             <textarea
               rows={4}
               maxLength={500}

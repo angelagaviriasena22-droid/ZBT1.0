@@ -2,7 +2,6 @@ from collections import Counter
 from decimal import Decimal
 
 from fastapi import HTTPException
-from psycopg2.extras import DateRange
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -18,7 +17,7 @@ def _ocupadas(db: Session, ini, fin) -> set[int]:
     filas = db.execute(
         text("""
             SELECT DISTINCT id_habitacion FROM viaje_habitacion
-            WHERE activa AND fechas && daterange(:ini, :fin, '[)')
+            WHERE activa AND fecha_inicio < :fin AND fecha_fin > :ini
         """),
         {"ini": ini, "fin": fin},
     )
@@ -104,24 +103,25 @@ def crear_viaje(db: Session, usuario: Usuario, datos: ViajeCrear) -> ViajeOut:
         precio=total,
         estado="reservado",
     )
-    rango = DateRange(datos.fecha_inicial, datos.fecha_final, "[)")
+    
     for pedida in datos.habitaciones:
         hab = habitaciones[pedida.id_habitacion]
         viaje.habitaciones.append(ViajeHabitacion(
             id_habitacion=hab.id_habitacion,
             personas_asignadas=pedida.personas,
             precio_noche=hab.precio,
-            fechas=rango,
+            fecha_inicio=datos.fecha_inicial,
+            fecha_fin=datos.fecha_final,
             activa=True,
         ))
 
     db.add(viaje)
     try:
-        db.commit()  # la base rechaza cruces de fechas aunque dos personas reserven a la vez
+        db.commit()
     except IntegrityError as e:
         db.rollback()
         print("--- ERROR REAL DE POSTGRES ---")
-        print(e.orig)  # <--- Esto nos dirá la verdad exacta en la terminal
+        print(e.orig)
         raise HTTPException(409, "Alguna de las habitaciones ya fue reservada en esas fechas")
     db.refresh(viaje)
     return _a_salida(viaje)
@@ -144,7 +144,7 @@ def cancelar_viaje(db: Session, usuario: Usuario, id_vp: int) -> ViajeOut:
         raise HTTPException(404, "Viaje no encontrado")
     if viaje.estado != "reservado":
         raise HTTPException(400, f"El viaje ya está {viaje.estado}")
-    viaje.estado = "cancelado"  # el trigger libera las habitaciones
+    viaje.estado = "cancelado"
     db.commit()
     db.refresh(viaje)
     return _a_salida(viaje)
